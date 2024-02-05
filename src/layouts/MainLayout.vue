@@ -4,7 +4,7 @@
     <SideMenu />
 
     <q-page-container>
-      <div class="q-px-md">
+      <div :class="$route.path != '/' ? 'q-px-md' : 'main-cont'">
         <router-view />
       </div>
     </q-page-container>

@@ -1,62 +1,72 @@
 <template>
   <q-page>
-    <div class="flex" style="gap: 8px">
-      <div class="col text-center">
-        <q-btn
-          color="primary"
-          class="full-width"
-          label="예약"
-          unelevated
-          @click="
-            () => {
-              $router.push('/book');
-            }
-          "
-        />
-      </div>
-      <div class="col text-center">
-        <q-btn
-          color="primary"
-          class="full-width"
-          label="예약확인"
-          unelevated
-          @click="
-            () => {
-              $router.push('/inquireReserve');
-            }
-          "
-        />
-      </div>
-      <div class="col text-center">
-        <q-btn
-          color="primary"
-          class="full-width"
-          label="QnA"
-          unelevated
-          @click="
-            () => {
-              $router.push('/qna');
-            }
-          "
-        />
+    <div class="main_banner">
+      <img src="../../assets/banner.jpeg" />
+      <div class="banner_txt">
+        <div class="banner_tit">Yeosu</div>
+        <div class="banner_desc">아름다운 여수바다 크루즈 투어</div>
+        <div class="banner_deco"></div>
       </div>
     </div>
+    <div class="q-px-md">
+      <div class="flex q-mt-md" style="gap: 8px">
+        <div class="col text-center">
+          <q-btn
+            color="primary"
+            class="full-width"
+            label="예약"
+            unelevated
+            @click="
+              () => {
+                $router.push('/book');
+              }
+            "
+          />
+        </div>
+        <div class="col text-center">
+          <q-btn
+            color="primary"
+            class="full-width"
+            label="예약확인"
+            unelevated
+            @click="
+              () => {
+                $router.push('/inquireReserve');
+              }
+            "
+          />
+        </div>
+        <div class="col text-center">
+          <q-btn
+            color="primary"
+            class="full-width"
+            label="QnA"
+            unelevated
+            @click="
+              () => {
+                $router.push('/qna');
+              }
+            "
+          />
+        </div>
+      </div>
 
-    <ContSubTitle
-      title="공지사항"
-      :show-more="
-        () => {
-          $router.push('/notice');
-        }
-      "
-    />
-    <MainNoticeList
-      v-for="(notice, index) in mainNoticeData"
-      :key="index"
-      :title="notice.title"
-      :desc="notice.desc"
-      :meta="notice.meta"
-    />
+      <ContSubTitle
+        title="공지사항"
+        :show-more="
+          () => {
+            $router.push('/notice');
+          }
+        "
+      />
+      <MainNoticeList
+        v-for="(notice, index) in mainNoticeData"
+        :key="index"
+        :title="notice.title"
+        :desc="notice.desc"
+        :meta="notice.meta"
+      />
+    </div>
   </q-page>
 </template>
 

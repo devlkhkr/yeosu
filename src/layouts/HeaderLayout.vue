@@ -1,5 +1,8 @@
 <template>
-  <q-header class="bg-transparent text-dark">
+  <q-header
+    class="bg-transparent text-dark q-pl-xs"
+    v-bind:class="{ 'main-header': $route.path === '/' }"
+  >
     <q-toolbar>
       <q-toolbar-title @click="() => $router.push('/')">
         Yeosu
