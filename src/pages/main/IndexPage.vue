@@ -8,7 +8,7 @@
         <div class="banner_deco"></div>
       </div>
     </div>
-    <div class="q-px-md">
+    <div class="q-pa-md q-mb-lg">
       <div class="flex q-mt-md" style="gap: 8px">
         <div class="col text-center">
           <q-btn
@@ -66,6 +66,8 @@
         :desc="notice.desc"
         :meta="notice.meta"
       />
+      <ContSubTitle title="오시는 길" />
+      <div class="map_area"></div>
     </div>
   </q-page>
 </template>
@@ -78,6 +80,16 @@ const mainNoticeData = [
   {
     title: '공지사항1 제목',
     desc: '공지사항1 내용',
+    meta: '2024-01-01',
+  },
+  {
+    title: '공지사항2 제목',
+    desc: '공지사항2 내용',
+    meta: '2024-01-01',
+  },
+  {
+    title: '공지사항3 제목',
+    desc: '공지사항3 내용',
     meta: '2024-01-01',
   },
 ];
