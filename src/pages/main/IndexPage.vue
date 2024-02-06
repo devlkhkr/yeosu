@@ -2,7 +2,14 @@
   <q-page>
     <MainBanner />
     <div class="q-pa-md q-mb-lg">
-      <WaveButton title="예약하기" />
+      <WaveButton
+        title="예약하기"
+        @click="
+          () => {
+            $router.push('/book');
+          }
+        "
+      />
       <div class="flex q-mt-sm" style="gap: 8px">
         <div class="col text-center">
           <q-btn

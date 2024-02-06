@@ -13,7 +13,7 @@ import { styled } from 'emotion-vuejs';
 
 const StyledMainBanner = styled('div')({
   position: 'relative',
-  height: '320px',
+  height: 320,
   overflow: 'hidden',
   img: {
     width: '100%',
@@ -42,15 +42,15 @@ const StyledMainBanner = styled('div')({
       zIndex: '-1',
     },
     '.banner_tit': {
-      fontSize: '24px',
+      fontSize: 24,
       fontWeight: '700',
       fontFamily: 'math',
       letterSpacing: 10,
       opacity: 0.7,
     },
     '.banner_desc': {
-      fontSize: '12px',
-      marginTop: '4px',
+      fontSize: 10,
+      marginTop: 4,
       fontWeight: 500,
       opacity: 0.7,
     },

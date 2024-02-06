@@ -6,7 +6,7 @@
     :width="300"
     side="right"
   >
-    <DrawerHeader> 123 </DrawerHeader>
+    <DrawerHeader> 홍길동님 안녕하세요 :) </DrawerHeader>
     <q-list>
       <EssentialLink
         v-for="link in Links"
