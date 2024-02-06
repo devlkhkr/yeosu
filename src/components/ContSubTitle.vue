@@ -1,7 +1,11 @@
 <template>
   <div class="text-subtitle1 flex no-wrap q-mt-xl q-mb-md">
     <div class="flex items-center full-width text-bold">
-      <q-icon :name="icon || 'o_push_pin'" class="q-mr-xs text-grey-7" />
+      <q-icon
+        :name="icon || 'push_pin'"
+        class="q-mr-xs"
+        style="color: #e69000"
+      />
       <span>{{ title }}</span>
     </div>
     <div v-if="showMore" class="full-width">

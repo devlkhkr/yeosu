@@ -96,6 +96,8 @@ const calendarOptions = {
     }
   },
   dateClick: (day: DateClickArg) => {
+    refAmPm.value = null;
+
     let allDays = document.getElementsByClassName('fc-day');
     let selectedDay = day.dayEl;
     Array.from(allDays).forEach((day) => {
