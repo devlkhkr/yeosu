@@ -1,5 +1,5 @@
 <template>
-  <div style="width: 100; height: 1000px; background-color: skyblue"></div>
+  <div>notice</div>
 </template>
 
 <script setup lang="ts"></script>

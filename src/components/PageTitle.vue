@@ -1,9 +1,9 @@
 <template>
   <q-page-sticky expand position="top">
     <MaxWidthCont>
-      <q-toolbar class="bg-grey-6">
+      <q-toolbar class="bg-blue-grey-2 text-blue-grey-9">
         <q-icon name="location_on" />
-        <q-toolbar-title> {{ title }} </q-toolbar-title>
+        <q-toolbar-title class="text-subtitle2"> {{ title }} </q-toolbar-title>
       </q-toolbar>
     </MaxWidthCont>
   </q-page-sticky>

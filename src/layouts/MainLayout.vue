@@ -1,23 +1,26 @@
 <template>
-  <MainLayout> </MainLayout>
-  <q-layout view="lHh Lpr lFf">
-    <HeaderLayout />
-    <SideMenu />
-
-    <q-page-container>
-      <Contents
-        v-bind:class="{
-          'main-cont': $route.path === '/',
-        }"
-      >
-        <q-page>
-          <PageTitle v-if="$route.path != '/'" :title="$route.name"></PageTitle>
-          <router-view />
-        </q-page>
-      </Contents>
-    </q-page-container>
-    <FooterLayout />
-  </q-layout>
+  <MainLayout>
+    <q-layout view="lHh Lpr lFf">
+      <HeaderLayout />
+      <SideMenu />
+      <q-page-container>
+        <Contents
+          v-bind:class="{
+            'main-cont': $route.path === '/',
+          }"
+        >
+          <q-page>
+            <PageTitle
+              v-if="$route.path != '/'"
+              :title="$route.name"
+            ></PageTitle>
+            <router-view />
+          </q-page>
+        </Contents>
+      </q-page-container>
+      <FooterLayout />
+    </q-layout>
+  </MainLayout>
 </template>
 z
 <script setup lang="ts">
@@ -47,6 +50,7 @@ const Contents = styled('div')({
   paddingTop: '50px',
   '&.main-cont': {
     padding: 0,
+    marginTop: '-50px',
   },
 });
 

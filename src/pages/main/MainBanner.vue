@@ -44,12 +44,15 @@ const StyledMainBanner = styled('div')({
     '.banner_tit': {
       fontSize: '24px',
       fontWeight: '700',
-      fontFamily: 'serif',
+      fontFamily: 'math',
+      letterSpacing: 10,
+      opacity: 0.7,
     },
     '.banner_desc': {
       fontSize: '12px',
       marginTop: '4px',
       fontWeight: 500,
+      opacity: 0.7,
     },
     '.banner_deco': {},
   },

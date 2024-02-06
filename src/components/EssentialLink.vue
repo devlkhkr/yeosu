@@ -9,7 +9,7 @@
       }
     "
     v-bind:class="{
-      'text-primary': $route.path === link,
+      'text-primary text-bold': $route.path === link,
     }"
   >
     <q-item-section v-if="icon" avatar>

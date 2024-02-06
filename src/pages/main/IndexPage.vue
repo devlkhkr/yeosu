@@ -2,25 +2,13 @@
   <q-page>
     <MainBanner />
     <div class="q-pa-md q-mb-lg">
-      <div class="flex q-mt-md" style="gap: 8px">
+      <WaveButton title="예약하기" />
+      <div class="flex q-mt-sm" style="gap: 8px">
         <div class="col text-center">
           <q-btn
             color="primary"
             class="full-width"
-            label="예약"
-            unelevated
-            @click="
-              () => {
-                $router.push('/book');
-              }
-            "
-          />
-        </div>
-        <div class="col text-center">
-          <q-btn
-            color="primary"
-            class="full-width"
-            label="예약확인"
+            label="나의 예약확인"
             unelevated
             @click="
               () => {
@@ -33,7 +21,7 @@
           <q-btn
             color="primary"
             class="full-width"
-            label="QnA"
+            label="1:1 문의"
             unelevated
             @click="
               () => {
@@ -60,7 +48,7 @@
         :meta="notice.meta"
       />
       <ContSubTitle title="오시는 길" />
-      <div class="map_area"></div>
+      <MapArea></MapArea>
     </div>
   </q-page>
 </template>
@@ -69,6 +57,14 @@
 import MainNoticeList from '../../components/MainNoticeList.vue';
 import ContSubTitle from '../../components/ContSubTitle.vue';
 import MainBanner from './MainBanner.vue';
+import WaveButton from 'src/components/WaveButton.vue';
+import { styled } from 'emotion-vuejs';
+
+const MapArea = styled('div')({
+  width: '100%',
+  height: '320px',
+  backgroundColor: '#999',
+});
 
 const mainNoticeData = [
   {

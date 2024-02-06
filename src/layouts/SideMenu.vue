@@ -6,18 +6,15 @@
     :width="300"
     side="right"
   >
-    <div>
-      <q-list>
-        <q-item-label header> 안녕하세요 홍길동님 :) </q-item-label>
-
-        <EssentialLink
-          v-for="link in Links"
-          :key="link.title"
-          v-bind="link"
-          :drawerOpen="drawerState.isOpened"
-        />
-      </q-list>
-    </div>
+    <DrawerHeader> 123 </DrawerHeader>
+    <q-list>
+      <EssentialLink
+        v-for="link in Links"
+        :key="link.title"
+        v-bind="link"
+        :drawerOpen="drawerState.isOpened"
+      />
+    </q-list>
     <q-footer class="bg-white q-pa-md">
       <q-btn
         class="full-width"
@@ -35,6 +32,14 @@
 import EssentialLink from 'src/components/EssentialLink.vue';
 import { Links } from '../router/links';
 import { drawerOpenState } from 'src/stores/example-store';
+import { styled } from 'emotion-vuejs';
 
+const DrawerHeader = styled('div')({
+  height: 120,
+  backgroundColor: 'var(--q-primary)',
+  color: '#fff',
+  padding: 16,
+  marginBottom: 8,
+});
 const drawerState = drawerOpenState();
 </script>

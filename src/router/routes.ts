@@ -52,7 +52,7 @@ const routes: RouteRecordRaw[] = [
       {
         path: '',
         component: () => import('pages/qna/IndexPage.vue'),
-        name: 'QnA',
+        name: '1:1 문의',
       },
     ],
   },

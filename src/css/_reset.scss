@@ -2,9 +2,6 @@
    v2.0 | 20110126
    License: none (public domain)
 */
-
-html,
-body,
 div,
 span,
 applet,
@@ -107,6 +104,8 @@ section {
 }
 body {
   line-height: 1;
+  background-color: #f3f3f3;
+  font-size: 14px;
 }
 ol,
 ul {
