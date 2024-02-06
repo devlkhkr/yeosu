@@ -48,6 +48,7 @@ const Contents = styled('div')({
   paddingLeft: '16px',
   paddingRight: '16px',
   paddingTop: '72px',
+  paddingBottom: '40px',
   '&.main-cont': {
     padding: 0,
     marginTop: '-50px',
