@@ -26,10 +26,11 @@ const StyledMainBanner = styled('div')({
     left: 0,
     top: '50%',
     transform: 'translate(0, -50%)',
-    padding: '20px',
+    padding: '20px 48px 20px 20px',
     backdropFilter: 'blur(2px)',
     borderRadius: '0 8px 8px 0',
     overflow: 'hidden',
+    color: '#001837',
     '&::after': {
       content: '""',
       position: 'absolute',

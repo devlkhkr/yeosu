@@ -10,17 +10,17 @@ export const Links = [
     link: '/notice',
   },
   {
-    title: '예약',
+    title: '예약하기',
     icon: 'o_calendar_month',
     link: '/book',
   },
   {
-    title: '예약확인',
+    title: '나의 예약확인',
     icon: 'o_checklist',
     link: '/inquireReserve',
   },
   {
-    title: 'QnA',
+    title: '1:1 문의',
     icon: 'o_quiz',
     link: '/qna',
   },

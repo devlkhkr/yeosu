@@ -6,7 +6,10 @@
     :width="300"
     side="right"
   >
-    <DrawerHeader> 홍길동님 안녕하세요 :) </DrawerHeader>
+    <DrawerHeader>
+      <img src="../assets/drawer-banner.png" />
+      <div class="drawer_cont"></div>
+    </DrawerHeader>
     <q-list>
       <EssentialLink
         v-for="link in Links"
@@ -38,8 +41,29 @@ const DrawerHeader = styled('div')({
   height: 120,
   backgroundColor: 'var(--q-primary)',
   color: '#fff',
-  padding: 16,
   marginBottom: 8,
+  position: 'relative',
+  img: {
+    position: 'absolute',
+    left: 0,
+    top: 0,
+    width: '100%',
+    height: '100%',
+    objectFit: 'cover',
+    objectPosition: 'center',
+  },
+  '.drawer_cont': {
+    padding: 16,
+    color: '#fff',
+    position: 'absolute',
+    top: '50%',
+    transform: 'translate(0, -50%)',
+    zIndex: 1,
+    b: {
+      fontWeight: 'bold',
+      marginRight: 4,
+    },
+  },
 });
 const drawerState = drawerOpenState();
 </script>

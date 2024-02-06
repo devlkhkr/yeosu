@@ -1,9 +1,12 @@
 <template>
   <div class="text-subtitle1 flex no-wrap q-mt-xl q-mb-md">
-    <div class="full-width">{{ title }}</div>
+    <div class="flex items-center full-width text-bold">
+      <q-icon :name="icon || 'o_push_pin'" class="q-mr-xs text-grey-7" />
+      <span>{{ title }}</span>
+    </div>
     <div v-if="showMore" class="full-width">
       <div
-        class="flex items-center justify-end text-grey-6"
+        class="flex items-center justify-end text-grey-6 text-caption"
         @click="
           () => {
             if (showMore) {
@@ -30,6 +33,10 @@ defineProps({
   title: {
     type: String as PropType<string>,
     required: true,
+  },
+  icon: {
+    type: String as PropType<string>,
+    required: false,
   },
   showMore: {
     type: Function,

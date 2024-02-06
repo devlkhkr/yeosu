@@ -27,7 +27,25 @@ const WaveButton = styled('a')({
   letterSpacing: 1,
   overflow: 'hidden',
   borderRadius: 4,
-  backgroundColor: 'var(--q-primary) !important',
+  backgroundColor: 'var(--q-primary)',
+  cursor: 'pointer',
+  '&::before': {
+    content: '""',
+    width: '100%',
+    height: '100%',
+    backgroundColor: '#fff',
+    position: 'absolute',
+    left: 0,
+    top: 0,
+    transitionDuration: '.3s',
+    opacity: 0,
+    pointerEvents: 'none',
+  },
+  '&:hover': {
+    '&::before': {
+      opacity: 0.2,
+    },
+  },
   span: {
     position: 'absolute',
     left: '50%',

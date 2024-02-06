@@ -12,7 +12,7 @@
           <q-page>
             <PageTitle
               v-if="$route.path != '/'"
-              :title="$route.name"
+              :title="$route.name || ''"
             ></PageTitle>
             <router-view />
           </q-page>
@@ -47,7 +47,7 @@ const MainLayout = styled('div')({
 const Contents = styled('div')({
   paddingLeft: '16px',
   paddingRight: '16px',
-  paddingTop: '50px',
+  paddingTop: '72px',
   '&.main-cont': {
     padding: 0,
     marginTop: '-50px',

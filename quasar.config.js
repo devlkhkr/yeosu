@@ -137,9 +137,9 @@ module.exports = configure(function (ctx) {
       // chainWebpackCustomSW (/* chain */) {},
 
       manifest: {
-        name: 'Quasar App',
-        short_name: 'Quasar App',
-        description: '',
+        name: '여수해양관광',
+        short_name: '여수해양관광',
+        description: '여수해양관광 예약 시스템',
         display: 'standalone',
         orientation: 'portrait',
         background_color: '#ffffff',

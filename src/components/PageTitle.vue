@@ -1,5 +1,5 @@
 <template>
-  <q-page-sticky expand position="top">
+  <q-page-sticky expand position="top" style="z-index: 3">
     <MaxWidthCont>
       <q-toolbar class="bg-blue-grey-2 text-blue-grey-9">
         <q-icon name="location_on" />
