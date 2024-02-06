@@ -7,7 +7,7 @@
     side="right"
   >
     <DrawerHeader>
-      <img src="../assets/drawer-banner.png" />
+      <img src="../assets/drawer-banner4.jpg" />
       <div class="drawer_cont"></div>
     </DrawerHeader>
     <q-list>

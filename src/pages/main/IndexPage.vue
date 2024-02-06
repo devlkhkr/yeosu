@@ -38,24 +38,29 @@
           />
         </div>
       </div>
-
-      <ContSubTitle
-        title="공지사항"
-        :show-more="
-          () => {
-            $router.push('/notice');
-          }
-        "
-      />
-      <MainNoticeList
-        v-for="(notice, index) in mainNoticeData"
-        :key="index"
-        :title="notice.title"
-        :desc="notice.desc"
-        :meta="notice.meta"
-      />
-      <ContSubTitle title="오시는 길" />
-      <MapArea></MapArea>
+      <div class="relative-position">
+        <CircleBg>
+          <div class="">
+            <ContSubTitle
+              title="공지사항"
+              :show-more="
+                () => {
+                  $router.push('/notice');
+                }
+              "
+            />
+            <MainNoticeList
+              v-for="(notice, index) in mainNoticeData"
+              :key="index"
+              :title="notice.title"
+              :desc="notice.desc"
+              :meta="notice.meta"
+            />
+            <ContSubTitle title="오시는 길" />
+            <MapArea></MapArea>
+          </div>
+        </CircleBg>
+      </div>
     </div>
   </q-page>
 </template>
@@ -65,6 +70,7 @@ import MainNoticeList from '../../components/MainNoticeList.vue';
 import ContSubTitle from '../../components/ContSubTitle.vue';
 import MainBanner from './MainBanner.vue';
 import WaveButton from 'src/components/WaveButton.vue';
+import CircleBg from 'src/components/CircleBg.vue';
 import { styled } from 'emotion-vuejs';
 
 const MapArea = styled('div')({

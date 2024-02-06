@@ -14,7 +14,12 @@
               v-if="$route.path != '/'"
               :title="$route.name || ''"
             ></PageTitle>
-            <router-view />
+            <div class="relative">
+              <CircleBg v-if="$route.path != '/'">
+                <router-view />
+              </CircleBg>
+              <router-view v-else />
+            </div>
           </q-page>
         </Contents>
       </q-page-container>
@@ -31,6 +36,7 @@ import SideMenu from './SideMenu.vue';
 import HeaderLayout from './HeaderLayout.vue';
 import FooterLayout from './FooterLayout.vue';
 import PageTitle from 'src/components/PageTitle.vue';
+import CircleBg from 'src/components/CircleBg.vue';
 
 const route = useRoute();
 const router = useRouter();

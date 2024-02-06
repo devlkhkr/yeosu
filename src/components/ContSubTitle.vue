@@ -4,7 +4,7 @@
       <q-icon
         :name="icon || 'push_pin'"
         class="q-mr-xs"
-        style="color: #e69000"
+        style="color: #e60048"
       />
       <span>{{ title }}</span>
     </div>

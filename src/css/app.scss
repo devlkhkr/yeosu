@@ -6,6 +6,9 @@
 
 i.logo {
   background-image: logo('00458a');
+  &.white {
+    background-image: logo('ffffff');
+  }
 }
 
 @keyframes wave-1 {

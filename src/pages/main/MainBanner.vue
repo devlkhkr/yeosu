@@ -1,5 +1,6 @@
 <template>
   <StyledMainBanner>
+    <!-- <img src="../../assets/banner.jpeg" /> -->
     <img src="../../assets/banner.jpeg" />
     <div class="banner_txt">
       <div class="banner_tit">Yeosu</div>

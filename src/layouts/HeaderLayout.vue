@@ -22,8 +22,17 @@
                 }
               "
             >
-              <i class="logo"></i>
-              <LogoText>
+              <i
+                class="logo"
+                v-bind:class="{
+                  white: !isScrolled && $route.path === '/',
+                }"
+              ></i>
+              <LogoText
+                v-bind:class="{
+                  white: !isScrolled && $route.path === '/',
+                }"
+              >
                 <h1>여수해양관광</h1>
                 <span class="comp_slogan">YEOSU MARINE TOURISM</span>
               </LogoText>
@@ -37,6 +46,9 @@
               icon="menu"
               aria-label="Menu"
               @click="drawerState.open"
+              v-bind:class="{
+                'text-white': !isScrolled && $route.path === '/',
+              }"
             />
           </div>
         </q-toolbar>
@@ -64,8 +76,6 @@ const StyledLogo = styled('div')({
   width: 'auto',
   cursor: 'pointer',
   alignItems: 'center',
-  color: '#00458a',
-  fontSize: 16,
   '.logo': {
     display: 'inline-block',
     width: 32,
@@ -85,6 +95,11 @@ const LogoText = styled('div')({
   height: 32,
   justifyContent: 'end',
   gap: 2,
+  color: '#00458a',
+  fontSize: 16,
+  '&.white': {
+    color: '#fff',
+  },
 });
 
 const HeaderColorWrap = styled('div')({
