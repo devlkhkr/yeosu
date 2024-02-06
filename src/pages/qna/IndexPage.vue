@@ -1,5 +1,5 @@
 <template>
-  <q-page>qna</q-page>
+  <div>qna</div>
 </template>
 
 <script setup lang="ts"></script>

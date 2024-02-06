@@ -1,13 +1,6 @@
 <template>
   <q-page>
-    <div class="main_banner">
-      <img src="../../assets/banner.jpeg" />
-      <div class="banner_txt">
-        <div class="banner_tit">Yeosu</div>
-        <div class="banner_desc">아름다운 여수바다 크루즈 투어</div>
-        <div class="banner_deco"></div>
-      </div>
-    </div>
+    <MainBanner />
     <div class="q-pa-md q-mb-lg">
       <div class="flex q-mt-md" style="gap: 8px">
         <div class="col text-center">
@@ -75,6 +68,7 @@
 <script setup lang="ts">
 import MainNoticeList from '../../components/MainNoticeList.vue';
 import ContSubTitle from '../../components/ContSubTitle.vue';
+import MainBanner from './MainBanner.vue';
 
 const mainNoticeData = [
   {

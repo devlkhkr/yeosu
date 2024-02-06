@@ -8,6 +8,9 @@
         $router.push(`${link}`);
       }
     "
+    v-bind:class="{
+      'text-primary': $route.path === link,
+    }"
   >
     <q-item-section v-if="icon" avatar>
       <q-icon :name="icon" />
