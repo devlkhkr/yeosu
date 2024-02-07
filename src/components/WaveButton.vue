@@ -31,6 +31,7 @@ const WaveButton = styled('button')({
   borderRadius: 4,
   backgroundColor: 'var(--q-primary)',
   cursor: 'pointer',
+  transitionDuration: '.3s',
   '&::before': {
     content: '""',
     width: '100%',
@@ -75,6 +76,9 @@ const WaveButton = styled('button')({
     top: '-100%',
     transform: 'rotate(180deg)',
     animation: 'wave-2 6s infinite linear',
+  },
+  '&:disabled': {
+    backgroundColor: '#888',
   },
 });
 </script>
