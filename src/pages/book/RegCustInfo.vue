@@ -27,7 +27,7 @@
       <q-expansion-item
         expand-separator
         icon="perm_contact_calendar"
-        :label="`인원 ${index + 1}${index === 0 ? ' (예약자)' : ''}`"
+        :label="`승객 ${index + 1}${index === 0 ? ' (예약자)' : ''}`"
         :default-opened="index === 0"
         header-class="bg-blue-grey-4 text-white text-subtitle2"
         expand-icon-class="text-white"
