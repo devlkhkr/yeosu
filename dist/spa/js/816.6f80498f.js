@@ -1,0 +1,1 @@
+"use strict";(globalThis["webpackChunk_yeosu"]=globalThis["webpackChunk_yeosu"]||[]).push([[816],{8816:(n,u,e)=>{e.r(u),e.d(u,{default:()=>o});var a=e(2444);function r(n,u){return(0,a.Wz)(),(0,a.An)("div",null,"qna")}var s=e(8716);const l={},c=(0,s.c)(l,[["render",r]]),o=c}}]);
