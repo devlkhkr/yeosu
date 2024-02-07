@@ -27,7 +27,11 @@
       <q-expansion-item
         expand-separator
         icon="perm_contact_calendar"
-        :label="`탑승객 ${index + 1}${index === 0 ? ' (예약자)' : ''}`"
+        :label="
+          bkdSchdInfo.custCnt === 1
+            ? '탑승객 정보'
+            : `탑승객 ${index + 1}${index === 0 ? ' (예약자)' : ''}`
+        "
         :default-opened="index === 0"
         header-class="bg-blue-grey-4 text-white text-subtitle2"
         expand-icon-class="text-white"
