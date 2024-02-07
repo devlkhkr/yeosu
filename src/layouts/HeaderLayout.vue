@@ -57,7 +57,7 @@
   </q-header>
 </template>
 <script setup lang="ts">
-import { drawerOpenState } from 'src/stores/example-store';
+import { drawerOpenState } from 'src/stores/common';
 import { styled } from 'emotion-vuejs';
 import { MaxWidthCont } from '../styled/common';
 import { ref } from 'vue';

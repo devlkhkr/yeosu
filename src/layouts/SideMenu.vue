@@ -7,7 +7,7 @@
     side="right"
   >
     <DrawerHeader>
-      <img src="../assets/drawer-banner4.jpg" />
+      <img src="../assets/drawer-banner.jpg" />
       <div class="drawer_cont"></div>
     </DrawerHeader>
     <q-list>
@@ -34,7 +34,7 @@
 <script setup lang="ts">
 import EssentialLink from 'src/components/EssentialLink.vue';
 import { Links } from '../router/links';
-import { drawerOpenState } from 'src/stores/example-store';
+import { drawerOpenState } from 'src/stores/common';
 import { styled } from 'emotion-vuejs';
 
 const DrawerHeader = styled('div')({

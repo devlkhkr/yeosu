@@ -126,6 +126,24 @@ table {
   border-collapse: collapse;
   border-spacing: 0;
 }
+
+input {
+  padding-left: 4px !important;
+  padding-right: 4px !important;
+}
+
 #q-app {
   overflow-x: hidden;
+}
+
+.v-money3 {
+  appearance: none;
+  border: 0;
+  background: unset;
+  width: 100%;
+  outline: unset;
+  &:disabled {
+    color: #333;
+    opacity: 1 !important;
+  }
 }

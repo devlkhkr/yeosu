@@ -22,7 +22,7 @@
         @click="refAmPm = 'pm'"
       >
         <q-item-section class="text-red">매진</q-item-section>
-        <q-item-section>☀️ 오후</q-item-section>
+        <q-item-section>🌙 오후</q-item-section>
         <q-item-section>32명/32명</q-item-section>
         <q-item-section side>100,000 원</q-item-section>
       </q-item>
@@ -66,12 +66,7 @@
       class="q-mt-lg"
       title="예약하기"
       :disabled="!refSelectedDay || !refAmPm || !refPrvPlcAgr"
-      @click="
-        () => {
-          console.log(refSelectedDay, refAmPm, refPrvPlcAgr);
-          //do order logic
-        }
-      "
+      @click="goRegCustInfo"
     />
   </div>
 </template>
@@ -83,6 +78,11 @@ import interactionPlugin, { DateClickArg } from '@fullcalendar/interaction';
 import WaveButton from 'src/components/WaveButton.vue';
 import { ref, watch } from 'vue';
 import { DatesSetArg } from '@fullcalendar/core';
+import { useRouter } from 'vue-router';
+import { bkdSchdInfoStore } from 'src/stores/common';
+
+const bkdSchdInfo = bkdSchdInfoStore();
+const router = useRouter();
 
 const refSelectedDay = ref<string | null>(null);
 const refAmPm = ref<string | null>(null);
@@ -94,6 +94,22 @@ watch(refSelectedDay, (newValue, oldValue) => {
   if (newValue) {
   }
 });
+
+const goRegCustInfo = () => {
+  if (
+    refSelectedDay.value &&
+    refAmPm.value &&
+    refHeadCount.value &&
+    refPrvPlcAgr.value
+  ) {
+    bkdSchdInfo.operDate = refSelectedDay.value;
+    bkdSchdInfo.operTime = refAmPm.value;
+    bkdSchdInfo.custCnt = refHeadCount.value;
+    bkdSchdInfo.ticketPrice = 100000;
+  }
+
+  router.push('/book/regCustInfo');
+};
 
 const calendarOptions = {
   plugins: [dayGridPlugin, interactionPlugin],

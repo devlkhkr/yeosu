@@ -24,7 +24,7 @@
 </template>
 
 <script setup lang="ts">
-import { drawerOpenState } from 'src/stores/example-store';
+import { drawerOpenState } from 'src/stores/common';
 
 const drawerState = drawerOpenState();
 
