@@ -20,7 +20,7 @@
     </q-list>
     <q-footer class="bg-white q-pa-md">
       <q-btn
-        class="full-width"
+        class="full-width text-caption"
         color="primary"
         label="고객센터 : 010-1234-5678"
         icon="support_agent"
