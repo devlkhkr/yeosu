@@ -3,7 +3,7 @@
     <div class="flex items-center full-width text-bold">
       <q-icon
         :name="icon || 'push_pin'"
-        class="q-mr-xs"
+        class="q-mr-sm"
         style="color: #e60048"
       />
       <span>{{ title }}</span>

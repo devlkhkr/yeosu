@@ -51,11 +51,24 @@
         <q-btn flat class="bg-grey-3" @click="refHeadCount++">&#43;</q-btn>
       </template>
     </q-input>
+    <div class="flex no-wrap full-width q-mt-xl">
+      <q-checkbox
+        size="md"
+        v-model="refPrvPlcAgr"
+        val="prvPlcAgr"
+        label="[필수] 개인정보 수집 및 이용 동의"
+      />
+      <q-btn flat size="sm" class="q-ml-auto bg-grey-3 text-grey-8"
+        >전문보기</q-btn
+      >
+    </div>
     <WaveButton
       class="q-mt-lg"
       title="예약하기"
+      :disabled="!refSelectedDay || !refAmPm || !refPrvPlcAgr"
       @click="
         () => {
+          console.log(refSelectedDay, refAmPm, refPrvPlcAgr);
           //do order logic
         }
       "
@@ -74,6 +87,7 @@ import { DatesSetArg } from '@fullcalendar/core';
 const refSelectedDay = ref<string | null>(null);
 const refAmPm = ref<string | null>(null);
 const refHeadCount = ref<number>(1);
+const refPrvPlcAgr = ref<boolean>(false);
 
 watch(refSelectedDay, (newValue, oldValue) => {
   console.log(newValue, oldValue);

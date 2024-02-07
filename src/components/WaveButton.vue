@@ -15,7 +15,9 @@ defineProps({
   },
 });
 
-const WaveButton = styled('a')({
+const WaveButton = styled('button')({
+  appearance: 'none',
+  border: '0',
   position: 'relative',
   width: '100%',
   height: 40,

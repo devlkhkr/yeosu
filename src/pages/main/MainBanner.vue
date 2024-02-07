@@ -46,7 +46,7 @@ const StyledMainBanner = styled('div')({
     '.banner_tit': {
       fontSize: 24,
       fontWeight: '700',
-      fontFamily: 'math',
+      fontFamily: 'Times New Roman',
       letterSpacing: 10,
       opacity: 0.8,
     },
