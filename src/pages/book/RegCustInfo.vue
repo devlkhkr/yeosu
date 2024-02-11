@@ -148,11 +148,13 @@
     </q-list>
     <WaveButton class="q-mt-lg" title="예약하기" />
 
-    <q-dialog v-model="newAddress" full-width>
-      <VueDaumPostcode
-        @complete="setCustAddr"
-        :theme="{ bgColor: '#FFFFFF' }"
-      />
+    <q-dialog v-model="newAddress">
+      <MaxWidthCont>
+        <VueDaumPostcode
+          @complete="setCustAddr"
+          :theme="{ bgColor: '#FFFFFF' }"
+        />
+      </MaxWidthCont>
     </q-dialog>
   </div>
 </template>
@@ -163,6 +165,7 @@ import { moneyOptionConfig } from 'src/constants/common';
 import { ref } from 'vue';
 import { BookedCustInfo } from 'src/types/cust';
 import { VueDaumPostcode } from 'vue-daum-postcode';
+import { MaxWidthCont } from 'src/styled/common';
 import WaveButton from 'src/components/WaveButton.vue';
 
 const newAddress = ref(false);
