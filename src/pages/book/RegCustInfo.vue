@@ -49,17 +49,19 @@
             <template v-slot:prepend>
               <span class="text-caption">주민등록번호</span>
             </template>
-            <div class="flex no-wrap items-center" style="gap: 16px">
+            <div class="flex no-wrap items-center full-width" style="gap: 16px">
               <q-input
                 v-model="custInfo[index].custSSNF"
                 maxlength="6"
                 borderless
+                class="full-width"
               />
               <span class="text-black">&#8722;</span>
               <q-input
                 v-model="custInfo[index].custSSNB"
                 maxlength="7"
                 borderless
+                class="full-width"
               />
             </div>
           </q-field>
