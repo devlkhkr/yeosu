@@ -7,6 +7,7 @@
         <Contents
           v-bind:class="{
             'main-cont': $route.path === '/',
+            'bg-e6e9ef': $route.path === '/reference',
           }"
         >
           <q-page>

@@ -46,7 +46,12 @@ const routes: RouteRecordRaw[] = [
       {
         path: '',
         component: () => import('pages/inquireReserve/IndexPage.vue'),
-        name: '예약확인',
+        name: '나의 예약확인',
+      },
+      {
+        path: 'myRsvList',
+        component: () => import('pages/inquireReserve/myRsvList.vue'),
+        name: '나의 예약 리스트',
       },
     ],
   },
@@ -58,6 +63,17 @@ const routes: RouteRecordRaw[] = [
         path: '',
         component: () => import('pages/qna/IndexPage.vue'),
         name: '1:1 문의',
+      },
+    ],
+  },
+  {
+    path: '/reference',
+    component: () => import('layouts/MainLayout.vue'),
+    children: [
+      {
+        path: '',
+        component: () => import('pages/reference/IndexPage.vue'),
+        name: '라이센스 및 오픈소스 저작권 정보',
       },
     ],
   },

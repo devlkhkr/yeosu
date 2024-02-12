@@ -11,9 +11,10 @@
 <script setup lang="ts">
 import { MaxWidthCont } from 'src/styled/common';
 import { PropType } from 'vue';
+import { RouteRecordName } from 'vue-router';
 defineProps({
   title: {
-    type: String as PropType<string>,
+    type: String as PropType<string | RouteRecordName>,
     required: true,
   },
 });
