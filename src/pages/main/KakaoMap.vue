@@ -2,6 +2,7 @@
   <MapArea>
     <KakaoMap
       :center="{ lat: 34.7458867, lng: 127.751222 }"
+      :level="4"
       style="width: 100%; height: 100%"
     >
       <Marker :position="{ lat: 34.7458867, lng: 127.751222 }"> </Marker>
