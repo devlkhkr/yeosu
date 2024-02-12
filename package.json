@@ -27,6 +27,7 @@
     "v-money3": "^3.24.1",
     "vue": "^3.2.29",
     "vue-daum-postcode": "^1.2.1",
+    "vue-kakao-maps": "^0.2.11",
     "vue-router": "^4.0.12"
   },
   "devDependencies": {
