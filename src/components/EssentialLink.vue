@@ -8,6 +8,7 @@
         $router.push(`${link}`);
       }
     "
+    class="text-4c5c6b"
     v-bind:class="{
       'text-primary text-bold bg-edf6ff': $route.path === link,
     }"

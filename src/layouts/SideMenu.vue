@@ -19,14 +19,16 @@
       />
     </q-list>
     <q-footer class="bg-white q-pa-md">
-      <q-btn
-        class="full-width text-caption"
-        color="primary"
-        label="고객센터 : 010-1234-5678"
-        icon="support_agent"
-        outline
-        unelevated
-      />
+      <a href="tel:010-1234-5678">
+        <q-btn
+          class="full-width text-caption"
+          color="primary"
+          label="고객센터 : 010-1234-5678"
+          icon="support_agent"
+          outline
+          unelevated
+        />
+      </a>
     </q-footer>
   </q-drawer>
 </template>
