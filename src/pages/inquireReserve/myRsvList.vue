@@ -1,5 +1,11 @@
 <template>
-  <q-tabs v-model="tab" class="text-primary" dense align="justify">
+  <q-tabs
+    v-model="tab"
+    class="text-blue-grey-8"
+    dense
+    align="justify"
+    active-color="primary"
+  >
     <q-tab name="month" label="1개월" />
     <q-tab name="half" label="6개월" />
     <q-tab name="year" label="1년" />
