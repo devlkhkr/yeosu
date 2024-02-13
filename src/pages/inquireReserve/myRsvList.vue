@@ -1,7 +1,17 @@
 <template>
+  <q-input v-model="srchParams.custNm" readonly>
+    <template v-slot:prepend>
+      <span class="text-caption">예약자명</span>
+    </template>
+  </q-input>
+  <q-input v-model="srchParams.lastDigit" readonly>
+    <template v-slot:prepend>
+      <span class="text-caption">휴대폰 번호 뒷자리</span>
+    </template>
+  </q-input>
   <q-tabs
-    v-model="tab"
-    class="text-blue-grey-8"
+    v-model="srchParams.period"
+    class="text-blue-grey-8 q-mt-lg"
     dense
     align="justify"
     active-color="primary"
@@ -39,6 +49,7 @@
   </div>
 </template>
 <script setup lang="ts">
-import { ref } from 'vue';
-const tab = ref('all');
+import { srchRsvParams } from 'src/stores/common';
+
+const srchParams = srchRsvParams();
 </script>

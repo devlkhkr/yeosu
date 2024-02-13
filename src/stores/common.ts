@@ -29,3 +29,14 @@ export const bkdSchdInfoStore = defineStore('bkdSchdInfoStore', {
   actions: {},
   persist: true,
 });
+
+export const srchRsvParams = defineStore('srchRsvParams', {
+  state: () => ({
+    custNm: '',
+    lastDigit: '',
+    period: 'all',
+  }),
+  getters: {},
+  actions: {},
+  persist: true,
+});
