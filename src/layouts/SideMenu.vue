@@ -24,7 +24,7 @@
           class="full-width text-caption"
           color="primary"
           label="고객센터 : 010-1234-5678"
-          icon="support_agent"
+          icon="o_call"
           outline
           unelevated
         />
