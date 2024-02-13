@@ -57,7 +57,7 @@
               :meta="notice.meta"
             />
             <ContSubTitle title="오시는 길" />
-            <MapArea></MapArea>
+            <KakaoMap />
           </div>
         </CircleBg>
       </div>
@@ -71,13 +71,7 @@ import ContSubTitle from '../../components/ContSubTitle.vue';
 import MainBanner from './MainBanner.vue';
 import WaveButton from 'src/components/WaveButton.vue';
 import CircleBg from 'src/components/CircleBg.vue';
-import { styled } from 'emotion-vuejs';
-
-const MapArea = styled('div')({
-  width: '100%',
-  height: '320px',
-  backgroundColor: '#999',
-});
+import KakaoMap from 'src/pages/main/KakaoMap.vue';
 
 const mainNoticeData = [
   {

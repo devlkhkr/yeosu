@@ -49,17 +49,19 @@
             <template v-slot:prepend>
               <span class="text-caption">주민등록번호</span>
             </template>
-            <div class="flex no-wrap items-center" style="gap: 16px">
+            <div class="flex no-wrap items-center full-width" style="gap: 16px">
               <q-input
                 v-model="custInfo[index].custSSNF"
                 maxlength="6"
                 borderless
+                class="full-width"
               />
               <span class="text-black">&#8722;</span>
               <q-input
                 v-model="custInfo[index].custSSNB"
                 maxlength="7"
                 borderless
+                class="full-width"
               />
             </div>
           </q-field>
@@ -146,11 +148,13 @@
     </q-list>
     <WaveButton class="q-mt-lg" title="예약하기" />
 
-    <q-dialog v-model="newAddress" full-width>
-      <VueDaumPostcode
-        @complete="setCustAddr"
-        :theme="{ bgColor: '#FFFFFF' }"
-      />
+    <q-dialog v-model="newAddress">
+      <MaxWidthCont>
+        <VueDaumPostcode
+          @complete="setCustAddr"
+          :theme="{ bgColor: '#FFFFFF' }"
+        />
+      </MaxWidthCont>
     </q-dialog>
   </div>
 </template>
@@ -161,6 +165,7 @@ import { moneyOptionConfig } from 'src/constants/common';
 import { ref } from 'vue';
 import { BookedCustInfo } from 'src/types/cust';
 import { VueDaumPostcode } from 'vue-daum-postcode';
+import { MaxWidthCont } from 'src/styled/common';
 import WaveButton from 'src/components/WaveButton.vue';
 
 const newAddress = ref(false);

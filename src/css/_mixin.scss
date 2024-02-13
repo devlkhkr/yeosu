@@ -1,0 +1,21 @@
+@mixin concave($distance) {
+  $distance-inverted: $distance * -1;
+  background: linear-gradient(
+    145deg,
+    rgba(5, 33, 96, 0.05),
+    rgba(255, 255, 255, 0.05)
+  );
+  box-shadow: $distance $distance ($distance * 2) #dee1ec,
+    $distance-inverted $distance-inverted ($distance * 2) #ffffff;
+}
+
+@mixin flat($distance) {
+  $distance-inverted: $distance * -1;
+  background: linear-gradient(
+    145deg,
+    rgba(5, 33, 96, 0.05),
+    rgba(255, 255, 255, 0.6)
+  );
+  box-shadow: $distance $distance ($distance * 2) #dfe0e7,
+    $distance-inverted $distance-inverted ($distance * 2) #ffffff;
+}
