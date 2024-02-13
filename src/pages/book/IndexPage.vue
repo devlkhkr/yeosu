@@ -135,7 +135,6 @@ const calendarOptions = ref({
         .then(function (response) {
           console.log('response:::', response);
           for (let i = 0; i < response.data.length; i++) {
-            let icon = '';
             let status = '';
             let statusClass = 'text-green';
             let rsv_num = response.data[i].rsv_num;
@@ -149,18 +148,14 @@ const calendarOptions = ref({
                 statusClass = 'text-red';
               }
             } else {
-              status = '미운항';
+              status = '휴항';
               color = '#666';
               statusClass = 'text-grey-6';
             }
-            if (response.data[i].tm_cd == '01') {
-              icon = '☀️';
-            } else {
-              icon = '🌙';
-            }
+            response.data[i].tm_cd = response.data[i].tm_cd.substring(1)
             const event = {
               date: response.data[i].tm_dt,
-              title: icon + ' ' + status + ' ' + rsv_num + '/' + al_num,
+              title: response.data[i].tm_cd + '차 ' + rsv_num + '/' + al_num,
               color: color,
               status: status,
               statusClass: statusClass,
@@ -168,6 +163,10 @@ const calendarOptions = ref({
               rsv_num: response.data[i].rsv_num,
               al_num: response.data[i].al_num,
               pr_nm: response.data[i].pr_nm,
+
+              // 타이틀의 아이콘 및 상태 표시 지우고 달력 여백에 N차 시간표시와 색상별 상태표기??
+              // 회색 = 휴항 / 파랑 = 운항 / 빨강 = 매진
+              // 1차 = tm_cd == '01'의 dt_nm 값
             };
 
             array.push(event);
