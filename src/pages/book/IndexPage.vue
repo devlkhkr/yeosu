@@ -9,10 +9,10 @@
         :active="refAmPm === 'am'"
         @click="refAmPm = 'am'"
       >
-        <q-item-section class="text-green">운항</q-item-section>
+        <q-item-section :class="refAmStClass">{{ refAmStatus }}</q-item-section>
         <q-item-section>☀️ 오전</q-item-section>
-        <q-item-section>16명/32명</q-item-section>
-        <q-item-section side>100,000 원</q-item-section>
+        <q-item-section>{{ refAmRsvNum }}명/{{ refAmAlNum }}명</q-item-section>
+        <q-item-section side>{{ refAmPrice }} 원</q-item-section>
       </q-item>
       <q-item
         clickable
@@ -21,16 +21,10 @@
         :active="refAmPm === 'pm'"
         @click="refAmPm = 'pm'"
       >
-        <q-item-section class="text-red">매진</q-item-section>
+        <q-item-section :class="refPmStClass">{{ refPmStatus }}</q-item-section>
         <q-item-section>🌙 오후</q-item-section>
-        <q-item-section>32명/32명</q-item-section>
-        <q-item-section side>100,000 원</q-item-section>
-      </q-item>
-      <q-item>
-        <q-item-section class="text-grey-6">미운항</q-item-section>
-        <q-item-section>☀️ 오전</q-item-section>
-        <q-item-section>-</q-item-section>
-        <q-item-section side>100,000 원</q-item-section>
+        <q-item-section>{{ refPmRsvNum }}명/{{ refPmAlNum }}명</q-item-section>
+        <q-item-section side>{{ refPmPrice }} 원</q-item-section>
       </q-item>
     </q-list>
     <q-list v-else bordered separator>
@@ -80,6 +74,8 @@ import { ref, watch } from 'vue';
 import { DatesSetArg } from '@fullcalendar/core';
 import { useRouter } from 'vue-router';
 import { bkdSchdInfoStore } from 'src/stores/common';
+import { EventInput } from '@fullcalendar/core';
+import axios from 'axios';
 
 const bkdSchdInfo = bkdSchdInfoStore();
 const router = useRouter();
@@ -88,6 +84,17 @@ const refSelectedDay = ref<string | null>(null);
 const refAmPm = ref<string | null>(null);
 const refHeadCount = ref<number>(1);
 const refPrvPlcAgr = ref<boolean>(false);
+
+const refAmStatus = ref<string | null>(null);
+const refPmStatus = ref<string | null>(null);
+const refAmRsvNum = ref<number>(0);
+const refAmAlNum = ref<number>(10);
+const refPmRsvNum = ref<number>(0);
+const refPmAlNum = ref<number>(10);
+const refAmPrice = ref<number>(0);
+const refPmPrice = ref<number>(0);
+const refAmStClass = ref<string>('');
+const refPmStClass = ref<string>('');
 
 watch(refSelectedDay, (newValue, oldValue) => {
   console.log(newValue, oldValue);
@@ -111,11 +118,64 @@ const goRegCustInfo = () => {
   router.push('/book/regCustInfo');
 };
 
-const calendarOptions = {
+const calendarOptions = ref({
   plugins: [dayGridPlugin, interactionPlugin],
   initialView: 'dayGridMonth',
+  // 현재 달에 해당하는 일자만 표시
+  showNonCurrentDates: false,
   datesSet: (month: DatesSetArg) => {
     if (month) {
+      const yearMonth = month.startStr.substring(0, 7);
+      let array: EventInput[] = [];
+
+      axios
+        .post(`${process.env.API_URL}/getReservationList`, {
+          yearMonth: yearMonth,
+        })
+        .then(function (response) {
+          console.log('response:::', response);
+          for (let i = 0; i < response.data.length; i++) {
+            let icon = '';
+            let status = '';
+            let statusClass = 'text-green';
+            let rsv_num = response.data[i].rsv_num;
+            let al_num = response.data[i].al_num;
+            let color = '#3788d8';
+            if (response.data[i].st_cd == '01') {
+              status = '운항';
+              if (rsv_num == al_num) {
+                status = '매진';
+                color = '#e5556a';
+                statusClass = 'text-red';
+              }
+            } else {
+              status = '미운항';
+              color = '#666';
+              statusClass = 'text-grey-6';
+            }
+            if (response.data[i].tm_cd == '01') {
+              icon = '☀️';
+            } else {
+              icon = '🌙';
+            }
+            const event = {
+              date: response.data[i].tm_dt,
+              title: icon + ' ' + status + ' ' + rsv_num + '/' + al_num,
+              color: color,
+              status: status,
+              statusClass: statusClass,
+              tm_cd: response.data[i].tm_cd,
+              rsv_num: response.data[i].rsv_num,
+              al_num: response.data[i].al_num,
+              pr_nm: response.data[i].pr_nm,
+            };
+
+            array.push(event);
+          }
+
+          calendarOptions.value.events = array;
+        });
+
       //달변경 이벤트시 선택되었던 dom이 사라지므로 다시 UI선택처리 해주는 로직
       let selectedDay = document.querySelector(
         "td[data-date='" + refSelectedDay.value + "']"
@@ -125,6 +185,7 @@ const calendarOptions = {
       }
     }
   },
+
   dateClick: (day: DateClickArg) => {
     refAmPm.value = null;
 
@@ -141,47 +202,53 @@ const calendarOptions = {
         refSelectedDay.value = day.dateStr;
         selectedDay.classList.add('selected-day');
       }
+
+      refAmRsvNum.value = calendarOptions.value.events.filter(
+        (item) => item.date == refSelectedDay.value && item.tm_cd == '01'
+      )[0].rsv_num;
+
+      refAmAlNum.value = calendarOptions.value.events.filter(
+        (item) => item.date == refSelectedDay.value && item.tm_cd == '01'
+      )[0].al_num;
+
+      refPmRsvNum.value = calendarOptions.value.events.filter(
+        (item) => item.date == refSelectedDay.value && item.tm_cd == '02'
+      )[0].rsv_num;
+
+      refPmAlNum.value = calendarOptions.value.events.filter(
+        (item) => item.date == refSelectedDay.value && item.tm_cd == '02'
+      )[0].al_num;
+
+      refAmStatus.value = calendarOptions.value.events.filter(
+        (item) => item.date == refSelectedDay.value && item.tm_cd == '01'
+      )[0].status;
+
+      refPmStatus.value = calendarOptions.value.events.filter(
+        (item) => item.date == refSelectedDay.value && item.tm_cd == '02'
+      )[0].status;
+
+      refAmPrice.value = calendarOptions.value.events.filter(
+        (item) => item.date == refSelectedDay.value && item.tm_cd == '01'
+      )[0].pr_nm;
+
+      refPmPrice.value = calendarOptions.value.events.filter(
+        (item) => item.date == refSelectedDay.value && item.tm_cd == '02'
+      )[0].pr_nm;
+
+      refAmStClass.value = calendarOptions.value.events.filter(
+        (item) => item.date == refSelectedDay.value && item.tm_cd == '01'
+      )[0].statusClass;
+
+      refPmStClass.value = calendarOptions.value.events.filter(
+        (item) => item.date == refSelectedDay.value && item.tm_cd == '02'
+      )[0].statusClass;
+
+      //for문으로 수정하기
     }
     console.log(day);
   },
-  events: [
-    {
-      date: '2024-02-01',
-      display: 'background',
-      color: '#daf5da',
-    },
-    {
-      date: '2024-02-02',
-      display: 'background',
-      color: '#ffd6d6',
-    },
-    {
-      date: '2024-02-05',
-      display: 'background',
-      color: '#ffd6d6',
-    },
-    {
-      date: '2024-02-06',
-      display: 'background',
-      color: '#daf5da',
-    },
-    {
-      title: '☀️ 11/32',
-      date: '2024-02-01',
-    },
-    {
-      title: '🌙 매진',
-      date: '2024-02-01',
-      color: '#e5556a',
-    },
-    { title: '☀️ 2/32', date: '2024-02-02' },
-    { title: '🌙 9/32', date: '2024-02-02' },
-    { title: '☀️ 미운항', date: '2024-02-05', color: '#666' },
-    { title: '🌙 미운항', date: '2024-02-05', color: '#666' },
-    { title: '☀️ 미운항', date: '2024-02-06', color: '#666' },
-    { title: '🌙 29/32', date: '2024-02-06' },
-  ],
+  events: [] as EventInput[],
 
   locale: 'ko',
-};
+});
 </script>
