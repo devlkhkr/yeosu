@@ -6,25 +6,20 @@
         clickable
         v-ripple
         active-class="bg-blue-1"
-        :active="refAmPm === 'am'"
-        @click="refAmPm = 'am'"
+        :active="refSelectedTm.tm_no === schedule.tm_no"
+        @click="refSelectedTm = schedule"
+        v-for="(schedule, index) in refTodayEvents"
+        :key="index"
       >
-        <q-item-section :class="refAmStClass">{{ refAmStatus }}</q-item-section>
-        <q-item-section>☀️ 오전</q-item-section>
-        <q-item-section>{{ refAmRsvNum }}명/{{ refAmAlNum }}명</q-item-section>
-        <q-item-section side>{{ refAmPrice }} 원</q-item-section>
-      </q-item>
-      <q-item
-        clickable
-        v-ripple
-        active-class="bg-blue-1"
-        :active="refAmPm === 'pm'"
-        @click="refAmPm = 'pm'"
-      >
-        <q-item-section :class="refPmStClass">{{ refPmStatus }}</q-item-section>
-        <q-item-section>🌙 오후</q-item-section>
-        <q-item-section>{{ refPmRsvNum }}명/{{ refPmAlNum }}명</q-item-section>
-        <q-item-section side>{{ refPmPrice }} 원</q-item-section>
+        <q-item-section :class="`${schedule.statusClass}`">{{
+          schedule.status
+        }}</q-item-section>
+
+        <q-item-section>{{ tmCdToHHmm(schedule.tm_cd) }}</q-item-section>
+        <q-item-section
+          >{{ schedule.rsv_num }}명/{{ schedule.al_num }}명</q-item-section
+        >
+        <q-item-section side>{{ schedule.pr_nm }} 원</q-item-section>
       </q-item>
     </q-list>
     <q-list v-else bordered separator>
@@ -35,7 +30,7 @@
       </q-item>
     </q-list>
   </div>
-  <div class="q-mt-lg text-caption" v-if="refSelectedDay && refAmPm">
+  <div class="q-mt-lg text-caption" v-if="refSelectedDay && refSelectedTm">
     <q-input type="number" :min="1" :max="10" v-model.number="refHeadCount">
       <template v-slot:prepend>
         <span class="text-caption">예약인원</span>
@@ -59,7 +54,7 @@
     <WaveButton
       class="q-mt-lg"
       title="예약하기"
-      :disabled="!refSelectedDay || !refAmPm || !refPrvPlcAgr"
+      :disabled="!refSelectedDay || !refSelectedTm || !refPrvPlcAgr"
       @click="goRegCustInfo"
     />
   </div>
@@ -70,47 +65,29 @@ import FullCalendar from '@fullcalendar/vue3';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin, { DateClickArg } from '@fullcalendar/interaction';
 import WaveButton from 'src/components/WaveButton.vue';
-import { ref, watch } from 'vue';
+import { ref } from 'vue';
 import { DatesSetArg } from '@fullcalendar/core';
 import { useRouter } from 'vue-router';
 import { bkdSchdInfoStore } from 'src/stores/common';
 import { EventInput } from '@fullcalendar/core';
 import axios from 'axios';
+import { tmCdToHHmm } from 'src/utils/cmcd';
 
 const bkdSchdInfo = bkdSchdInfoStore();
 const router = useRouter();
 
 const refSelectedDay = ref<string | null>(null);
-const refAmPm = ref<string | null>(null);
 const refHeadCount = ref<number>(1);
 const refPrvPlcAgr = ref<boolean>(false);
 
-const refAmStatus = ref<string | null>(null);
-const refPmStatus = ref<string | null>(null);
-const refAmRsvNum = ref<number>(0);
-const refAmAlNum = ref<number>(10);
-const refPmRsvNum = ref<number>(0);
-const refPmAlNum = ref<number>(10);
-const refAmPrice = ref<number>(0);
-const refPmPrice = ref<number>(0);
-const refAmStClass = ref<string>('');
-const refPmStClass = ref<string>('');
+const refSelectedTm: EventInput = ref('');
 
-watch(refSelectedDay, (newValue, oldValue) => {
-  console.log(newValue, oldValue);
-  if (newValue) {
-  }
-});
+const refTodayEvents = ref<EventInput[]>([]);
 
 const goRegCustInfo = () => {
-  if (
-    refSelectedDay.value &&
-    refAmPm.value &&
-    refHeadCount.value &&
-    refPrvPlcAgr.value
-  ) {
-    bkdSchdInfo.operDate = refSelectedDay.value;
-    bkdSchdInfo.operTime = refAmPm.value;
+  if (refSelectedTm.value && refHeadCount.value && refPrvPlcAgr.value) {
+    bkdSchdInfo.operDate = refSelectedTm.value.tm_dt;
+    bkdSchdInfo.operTime = refSelectedTm.value.tm_nm;
     bkdSchdInfo.custCnt = refHeadCount.value;
     bkdSchdInfo.ticketPrice = 100000;
   }
@@ -134,6 +111,11 @@ const calendarOptions = ref({
         })
         .then(function (response) {
           console.log('response:::', response);
+
+          const bgState: {
+            [key: string]: boolean;
+          } = {};
+
           for (let i = 0; i < response.data.length; i++) {
             let status = '';
             let statusClass = 'text-green';
@@ -152,27 +134,48 @@ const calendarOptions = ref({
               color = '#666';
               statusClass = 'text-grey-6';
             }
-            response.data[i].tm_cd = response.data[i].tm_cd.substring(1)
+
             const event = {
+              tm_no: response.data[i].tm_no,
               date: response.data[i].tm_dt,
-              title: response.data[i].tm_cd + '차 ' + rsv_num + '/' + al_num,
+              title:
+                status === '운항'
+                  ? response.data[i].tm_cd + '차 ' + rsv_num + '/' + al_num
+                  : response.data[i].tm_cd + '차 ' + status,
               color: color,
               status: status,
               statusClass: statusClass,
               tm_cd: response.data[i].tm_cd,
+              tm_nm: response.data[i].tm_nm,
               rsv_num: response.data[i].rsv_num,
               al_num: response.data[i].al_num,
               pr_nm: response.data[i].pr_nm,
 
               // 타이틀의 아이콘 및 상태 표시 지우고 달력 여백에 N차 시간표시와 색상별 상태표기??
-              // 회색 = 휴항 / 파랑 = 운항 / 빨강 = 매진
               // 1차 = tm_cd == '01'의 dt_nm 값
             };
+
+            if (!bgState[response.data[i].tm_dt]) {
+              bgState[response.data[i].tm_dt] =
+                response.data[i].st_nm === '운행' && rsv_num < al_num
+                  ? true
+                  : false;
+            }
 
             array.push(event);
           }
 
-          calendarOptions.value.events = array;
+          const bgArray: EventInput[] = [];
+          for (let i = 0; i < Object.keys(bgState).length; i++) {
+            bgArray.push({
+              display: 'background',
+              color: Object.values(bgState)[i] ? '#daf5da' : '#ffd6d6',
+              date: Object.keys(bgState)[i],
+            });
+          }
+
+          console.log('bgState::', bgState);
+          calendarOptions.value.events = [...array, ...bgArray];
         });
 
       //달변경 이벤트시 선택되었던 dom이 사라지므로 다시 UI선택처리 해주는 로직
@@ -186,7 +189,13 @@ const calendarOptions = ref({
   },
 
   dateClick: (day: DateClickArg) => {
-    refAmPm.value = null;
+    day.dateStr;
+
+    const todayEvents = calendarOptions.value.events.filter((event) => {
+      return day.dateStr === event.date && event.display != 'background';
+    });
+
+    refTodayEvents.value = todayEvents;
 
     let allDays = document.getElementsByClassName('fc-day');
     let selectedDay = day.dayEl;
@@ -201,48 +210,6 @@ const calendarOptions = ref({
         refSelectedDay.value = day.dateStr;
         selectedDay.classList.add('selected-day');
       }
-
-      refAmRsvNum.value = calendarOptions.value.events.filter(
-        (item) => item.date == refSelectedDay.value && item.tm_cd == '01'
-      )[0].rsv_num;
-
-      refAmAlNum.value = calendarOptions.value.events.filter(
-        (item) => item.date == refSelectedDay.value && item.tm_cd == '01'
-      )[0].al_num;
-
-      refPmRsvNum.value = calendarOptions.value.events.filter(
-        (item) => item.date == refSelectedDay.value && item.tm_cd == '02'
-      )[0].rsv_num;
-
-      refPmAlNum.value = calendarOptions.value.events.filter(
-        (item) => item.date == refSelectedDay.value && item.tm_cd == '02'
-      )[0].al_num;
-
-      refAmStatus.value = calendarOptions.value.events.filter(
-        (item) => item.date == refSelectedDay.value && item.tm_cd == '01'
-      )[0].status;
-
-      refPmStatus.value = calendarOptions.value.events.filter(
-        (item) => item.date == refSelectedDay.value && item.tm_cd == '02'
-      )[0].status;
-
-      refAmPrice.value = calendarOptions.value.events.filter(
-        (item) => item.date == refSelectedDay.value && item.tm_cd == '01'
-      )[0].pr_nm;
-
-      refPmPrice.value = calendarOptions.value.events.filter(
-        (item) => item.date == refSelectedDay.value && item.tm_cd == '02'
-      )[0].pr_nm;
-
-      refAmStClass.value = calendarOptions.value.events.filter(
-        (item) => item.date == refSelectedDay.value && item.tm_cd == '01'
-      )[0].statusClass;
-
-      refPmStClass.value = calendarOptions.value.events.filter(
-        (item) => item.date == refSelectedDay.value && item.tm_cd == '02'
-      )[0].statusClass;
-
-      //for문으로 수정하기
     }
     console.log(day);
   },
