@@ -22,15 +22,19 @@
     <q-tab name="all" label="전체" />
   </q-tabs>
   <div class="q-mt-lg">
-    <OperTicket :tickets="ticketList" />
+    <OperTicket :tickets="ticketList" v-if="ticketList.length > 0" />
+    <ListEmpty message="검색된 예약리스트가 없습니다." v-else />
   </div>
 </template>
 <script setup lang="ts">
 import { srchRsvParams } from 'src/stores/common';
 import OperTicket from 'src/components/OperTicket.vue';
+import { ref } from 'vue';
+import { Ticket } from 'src/types/ticket';
+import ListEmpty from 'src/components/ListEmpty.vue';
 const srchParams = srchRsvParams();
 
-const ticketList = [
+const ticketList = ref<Ticket[]>([
   {
     rsvNo: '2024012495',
     rsvDt: '2024-01-24',
@@ -47,5 +51,5 @@ const ticketList = [
     operStt: '미운항',
     headCnt: 3,
   },
-];
+]);
 </script>

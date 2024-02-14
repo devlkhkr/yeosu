@@ -49,7 +49,15 @@
               target="_blank"
               >작가 rawpixel.com</a
             >
-            출처 Freepik
+            From Freepik
+          </div>
+          <div class="text-blue-grey-7">
+            Empty Icon :
+            <a
+              href="https://www.flaticon.com/free-icons/empty-state"
+              title="empty state icons"
+              >Empty state icons created by andinur - Flaticon</a
+            >
           </div>
         </td>
       </tr>
