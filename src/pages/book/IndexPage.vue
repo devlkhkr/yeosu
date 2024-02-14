@@ -6,31 +6,20 @@
         clickable
         v-ripple
         active-class="bg-blue-1"
-        :active="refAmPm === 'am'"
-        @click="refAmPm = 'am'"
+        :active="refSelectedTm.tm_no === schedule.tm_no"
+        @click="refSelectedTm = schedule"
+        v-for="(schedule, index) in refTodayEvents"
+        :key="index"
       >
-        <q-item-section class="text-green">운항</q-item-section>
-        <q-item-section>☀️ 오전</q-item-section>
-        <q-item-section>16명/32명</q-item-section>
-        <q-item-section side>100,000 원</q-item-section>
-      </q-item>
-      <q-item
-        clickable
-        v-ripple
-        active-class="bg-blue-1"
-        :active="refAmPm === 'pm'"
-        @click="refAmPm = 'pm'"
-      >
-        <q-item-section class="text-red">매진</q-item-section>
-        <q-item-section>🌙 오후</q-item-section>
-        <q-item-section>32명/32명</q-item-section>
-        <q-item-section side>100,000 원</q-item-section>
-      </q-item>
-      <q-item>
-        <q-item-section class="text-grey-6">미운항</q-item-section>
-        <q-item-section>☀️ 오전</q-item-section>
-        <q-item-section>-</q-item-section>
-        <q-item-section side>100,000 원</q-item-section>
+        <q-item-section :class="`${schedule.statusClass}`">{{
+          schedule.status
+        }}</q-item-section>
+
+        <q-item-section>{{ tmCdToHHmm(schedule.tm_cd) }}</q-item-section>
+        <q-item-section
+          >{{ schedule.rsv_num }}명/{{ schedule.al_num }}명</q-item-section
+        >
+        <q-item-section side>{{ schedule.pr_nm }} 원</q-item-section>
       </q-item>
     </q-list>
     <q-list v-else bordered separator>
@@ -41,7 +30,7 @@
       </q-item>
     </q-list>
   </div>
-  <div class="q-mt-lg text-caption" v-if="refSelectedDay && refAmPm">
+  <div class="q-mt-lg text-caption" v-if="refSelectedDay && refSelectedTm">
     <q-input type="number" :min="1" :max="10" v-model.number="refHeadCount">
       <template v-slot:prepend>
         <span class="text-caption">예약인원</span>
@@ -65,7 +54,7 @@
     <WaveButton
       class="q-mt-lg"
       title="예약하기"
-      :disabled="!refSelectedDay || !refAmPm || !refPrvPlcAgr"
+      :disabled="!refSelectedDay || !refSelectedTm || !refPrvPlcAgr"
       @click="goRegCustInfo"
     />
   </div>
@@ -76,34 +65,29 @@ import FullCalendar from '@fullcalendar/vue3';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin, { DateClickArg } from '@fullcalendar/interaction';
 import WaveButton from 'src/components/WaveButton.vue';
-import { ref, watch } from 'vue';
+import { ref } from 'vue';
 import { DatesSetArg } from '@fullcalendar/core';
 import { useRouter } from 'vue-router';
 import { bkdSchdInfoStore } from 'src/stores/common';
+import { EventInput } from '@fullcalendar/core';
+import axios from 'axios';
+import { tmCdToHHmm } from 'src/utils/cmcd';
 
 const bkdSchdInfo = bkdSchdInfoStore();
 const router = useRouter();
 
 const refSelectedDay = ref<string | null>(null);
-const refAmPm = ref<string | null>(null);
 const refHeadCount = ref<number>(1);
 const refPrvPlcAgr = ref<boolean>(false);
 
-watch(refSelectedDay, (newValue, oldValue) => {
-  console.log(newValue, oldValue);
-  if (newValue) {
-  }
-});
+const refSelectedTm: EventInput = ref('');
+
+const refTodayEvents = ref<EventInput[]>([]);
 
 const goRegCustInfo = () => {
-  if (
-    refSelectedDay.value &&
-    refAmPm.value &&
-    refHeadCount.value &&
-    refPrvPlcAgr.value
-  ) {
-    bkdSchdInfo.operDate = refSelectedDay.value;
-    bkdSchdInfo.operTime = refAmPm.value;
+  if (refSelectedTm.value && refHeadCount.value && refPrvPlcAgr.value) {
+    bkdSchdInfo.operDate = refSelectedTm.value.tm_dt;
+    bkdSchdInfo.operTime = refSelectedTm.value.tm_nm;
     bkdSchdInfo.custCnt = refHeadCount.value;
     bkdSchdInfo.ticketPrice = 100000;
   }
@@ -111,11 +95,89 @@ const goRegCustInfo = () => {
   router.push('/book/regCustInfo');
 };
 
-const calendarOptions = {
+const calendarOptions = ref({
   plugins: [dayGridPlugin, interactionPlugin],
   initialView: 'dayGridMonth',
+  // 현재 달에 해당하는 일자만 표시
+  showNonCurrentDates: false,
   datesSet: (month: DatesSetArg) => {
     if (month) {
+      const yearMonth = month.startStr.substring(0, 7);
+      let array: EventInput[] = [];
+
+      axios
+        .post(`${process.env.API_URL}/getReservationList`, {
+          yearMonth: yearMonth,
+        })
+        .then(function (response) {
+          console.log('response:::', response);
+
+          const bgState: {
+            [key: string]: boolean;
+          } = {};
+
+          for (let i = 0; i < response.data.length; i++) {
+            let status = '';
+            let statusClass = 'text-green';
+            let rsv_num = response.data[i].rsv_num;
+            let al_num = response.data[i].al_num;
+            let color = '#3788d8';
+            if (response.data[i].st_cd == '01') {
+              status = '운항';
+              if (rsv_num == al_num) {
+                status = '매진';
+                color = '#e5556a';
+                statusClass = 'text-red';
+              }
+            } else {
+              status = '휴항';
+              color = '#666';
+              statusClass = 'text-grey-6';
+            }
+
+            const event = {
+              tm_no: response.data[i].tm_no,
+              date: response.data[i].tm_dt,
+              title:
+                status === '운항'
+                  ? response.data[i].tm_cd + '차 ' + rsv_num + '/' + al_num
+                  : response.data[i].tm_cd + '차 ' + status,
+              color: color,
+              status: status,
+              statusClass: statusClass,
+              tm_cd: response.data[i].tm_cd,
+              tm_nm: response.data[i].tm_nm,
+              rsv_num: response.data[i].rsv_num,
+              al_num: response.data[i].al_num,
+              pr_nm: response.data[i].pr_nm,
+
+              // 타이틀의 아이콘 및 상태 표시 지우고 달력 여백에 N차 시간표시와 색상별 상태표기??
+              // 1차 = tm_cd == '01'의 dt_nm 값
+            };
+
+            if (!bgState[response.data[i].tm_dt]) {
+              bgState[response.data[i].tm_dt] =
+                response.data[i].st_nm === '운행' && rsv_num < al_num
+                  ? true
+                  : false;
+            }
+
+            array.push(event);
+          }
+
+          const bgArray: EventInput[] = [];
+          for (let i = 0; i < Object.keys(bgState).length; i++) {
+            bgArray.push({
+              display: 'background',
+              color: Object.values(bgState)[i] ? '#daf5da' : '#ffd6d6',
+              date: Object.keys(bgState)[i],
+            });
+          }
+
+          console.log('bgState::', bgState);
+          calendarOptions.value.events = [...array, ...bgArray];
+        });
+
       //달변경 이벤트시 선택되었던 dom이 사라지므로 다시 UI선택처리 해주는 로직
       let selectedDay = document.querySelector(
         "td[data-date='" + refSelectedDay.value + "']"
@@ -125,8 +187,15 @@ const calendarOptions = {
       }
     }
   },
+
   dateClick: (day: DateClickArg) => {
-    refAmPm.value = null;
+    day.dateStr;
+
+    const todayEvents = calendarOptions.value.events.filter((event) => {
+      return day.dateStr === event.date && event.display != 'background';
+    });
+
+    refTodayEvents.value = todayEvents;
 
     let allDays = document.getElementsByClassName('fc-day');
     let selectedDay = day.dayEl;
@@ -144,44 +213,8 @@ const calendarOptions = {
     }
     console.log(day);
   },
-  events: [
-    {
-      date: '2024-02-01',
-      display: 'background',
-      color: '#daf5da',
-    },
-    {
-      date: '2024-02-02',
-      display: 'background',
-      color: '#ffd6d6',
-    },
-    {
-      date: '2024-02-05',
-      display: 'background',
-      color: '#ffd6d6',
-    },
-    {
-      date: '2024-02-06',
-      display: 'background',
-      color: '#daf5da',
-    },
-    {
-      title: '☀️ 11/32',
-      date: '2024-02-01',
-    },
-    {
-      title: '🌙 매진',
-      date: '2024-02-01',
-      color: '#e5556a',
-    },
-    { title: '☀️ 2/32', date: '2024-02-02' },
-    { title: '🌙 9/32', date: '2024-02-02' },
-    { title: '☀️ 미운항', date: '2024-02-05', color: '#666' },
-    { title: '🌙 미운항', date: '2024-02-05', color: '#666' },
-    { title: '☀️ 미운항', date: '2024-02-06', color: '#666' },
-    { title: '🌙 29/32', date: '2024-02-06' },
-  ],
+  events: [] as EventInput[],
 
   locale: 'ko',
-};
+});
 </script>
