@@ -31,7 +31,7 @@
     </q-list>
   </div>
   <div class="q-mt-lg text-caption" v-if="refSelectedDay && refSelectedTm">
-    <q-input type="number" :min="1" :max="10" v-model.number="refHeadCount">
+    <q-input type="number" :rules="[headCheck]" v-model.number="refHeadCount">
       <template v-slot:prepend>
         <span class="text-caption">예약인원</span>
       </template>
@@ -72,6 +72,7 @@ import { bkdSchdInfoStore } from 'src/stores/common';
 import { EventInput } from '@fullcalendar/core';
 import axios from 'axios';
 import { tmCdToHHmm } from 'src/utils/cmcd';
+import { ValidationRule } from 'quasar';
 
 const bkdSchdInfo = bkdSchdInfoStore();
 const router = useRouter();
@@ -83,6 +84,14 @@ const refPrvPlcAgr = ref<boolean>(false);
 const refSelectedTm: EventInput = ref('');
 
 const refTodayEvents = ref<EventInput[]>([]);
+
+const headCheck: ValidationRule = (val: number) => {
+  if(val < 1){
+    return '1이상의 숫자를 입력해주세요'
+  } else if(val >10){
+    return '10이하의 숫자를 입력해주세요'
+  }
+}
 
 const goRegCustInfo = () => {
   if (refSelectedTm.value && refHeadCount.value && refPrvPlcAgr.value) {
