@@ -31,7 +31,7 @@
     </q-list>
   </div>
   <div class="q-mt-lg text-caption" v-if="refSelectedDay && refSelectedTm">
-    <q-input type="number" :min="1" :max="10" v-model.number="refHeadCount">
+    <q-input type="number" v-model.number="refHeadCount">
       <template v-slot:prepend>
         <span class="text-caption">예약인원</span>
       </template>
@@ -65,7 +65,7 @@ import FullCalendar from '@fullcalendar/vue3';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin, { DateClickArg } from '@fullcalendar/interaction';
 import WaveButton from 'src/components/WaveButton.vue';
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 import { DatesSetArg } from '@fullcalendar/core';
 import { useRouter } from 'vue-router';
 import { bkdSchdInfoStore } from 'src/stores/common';
@@ -80,9 +80,24 @@ const refSelectedDay = ref<string | null>(null);
 const refHeadCount = ref<number>(1);
 const refPrvPlcAgr = ref<boolean>(false);
 
-const refSelectedTm: EventInput = ref('');
+const refSelectedTm: EventInput = ref({});
 
 const refTodayEvents = ref<EventInput[]>([]);
+
+watch(refHeadCount, (newValue, oldValue) => {
+  console.log(oldValue, newValue);
+  console.log(
+    newValue > refSelectedTm.value.al_num - refSelectedTm.value.rsv_num
+  );
+  if (newValue > refSelectedTm.value.al_num - refSelectedTm.value.rsv_num) {
+    refHeadCount.value =
+      refSelectedTm.value.al_num - refSelectedTm.value.rsv_num;
+  }
+
+  if (newValue < 1) {
+    refHeadCount.value = 1;
+  }
+});
 
 const goRegCustInfo = () => {
   if (
@@ -194,7 +209,8 @@ const calendarOptions = ref({
   },
 
   dateClick: (day: DateClickArg) => {
-    day.dateStr;
+    refHeadCount.value = 1;
+    refSelectedTm.value = {};
 
     const todayEvents = calendarOptions.value.events.filter((event) => {
       return day.dateStr === event.date && event.display != 'background';
