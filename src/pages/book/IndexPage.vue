@@ -1,7 +1,11 @@
 <template>
   <FullCalendar :options="calendarOptions" />
   <div class="q-mt-lg text-caption">
-    <q-list v-if="refSelectedDay" bordered separator>
+    <q-list
+      v-if="refSelectedDay && refTodayEvents.length > 0"
+      bordered
+      separator
+    >
       <q-item
         clickable
         v-ripple
@@ -20,6 +24,17 @@
           >{{ schedule.rsv_num }}명/{{ schedule.al_num }}명</q-item-section
         >
         <q-item-section side>{{ schedule.pr_nm }} 원</q-item-section>
+      </q-item>
+    </q-list>
+    <q-list
+      v-else-if="refSelectedDay && refTodayEvents.length === 0"
+      bordered
+      separator
+    >
+      <q-item>
+        <q-item-section class="text-center">
+          <ListEmpty message="해당 날짜에 등록된 운항이 없습니다." />
+        </q-item-section>
       </q-item>
     </q-list>
     <q-list v-else bordered separator>
@@ -65,13 +80,14 @@ import FullCalendar from '@fullcalendar/vue3';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin, { DateClickArg } from '@fullcalendar/interaction';
 import WaveButton from 'src/components/WaveButton.vue';
+import ListEmpty from 'src/components/ListEmpty.vue';
 import { ref, watch } from 'vue';
 import { DatesSetArg } from '@fullcalendar/core';
 import { useRouter } from 'vue-router';
 import { bkdSchdInfoStore } from 'src/stores/common';
 import { EventInput } from '@fullcalendar/core';
-import axios from 'axios';
 import { tmCdToHHmm } from 'src/utils/cmcd';
+import axios from 'axios';
 
 const bkdSchdInfo = bkdSchdInfoStore();
 const router = useRouter();
@@ -232,7 +248,6 @@ const calendarOptions = ref({
         selectedDay.classList.add('selected-day');
       }
     }
-    console.log(day);
   },
   events: [] as EventInput[],
 
