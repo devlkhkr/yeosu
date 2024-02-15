@@ -1,4 +1,13 @@
 .fc {
+  .fc-day-disabled {
+    background-color: #fff;
+  }
+  &-theme-standard {
+    td,
+    th {
+      // border-color: #ddd;
+    }
+  }
   &-view-harness {
     height: 0 !important;
     padding-bottom: calc(100% - 5px) !important;

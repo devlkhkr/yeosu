@@ -84,7 +84,7 @@
         val="prvPlcAgr"
         label="[필수] 개인정보 수집 및 이용 동의"
       />
-      <q-btn flat size="sm" class="q-ml-auto bg-grey-3 text-grey-8"
+      <q-btn flat size="sm" class="q-ml-auto bg-blue-grey-6 text-white"
         >전문보기</q-btn
       >
     </div>
@@ -190,7 +190,7 @@ const goRegCustInfo = () => {
     bkdSchdInfo.operDate = refSelectedDay.value;
     bkdSchdInfo.operTime = refSelectedTm.value.tm_nm;
     bkdSchdInfo.custCnt = refHeadCount.value;
-    bkdSchdInfo.ticketPrice = 100000;
+    bkdSchdInfo.ticketPrice = refSelectedTm.value.pr_nm;
   }
 
   router.push('/book/regCustInfo');
