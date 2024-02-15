@@ -5,9 +5,9 @@
 
 <script setup lang="ts">
 import MainNoticeList from '../../components/MainNoticeList.vue';
-import SearchForm from 'src/components/SearchForm.vue';
+import SearchForm, { IFSearchForm } from 'src/components/SearchForm.vue';
 
-const formOptions = {
+const formOptions: IFSearchForm = {
   items: [
     {
       name: 'title',
@@ -15,8 +15,8 @@ const formOptions = {
       type: 'string',
     },
   ],
-  onSearch: () => {
-    alert();
+  onSearch: (refItemsModel) => {
+    console.log(refItemsModel);
   },
 };
 

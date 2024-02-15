@@ -9,16 +9,19 @@
       <q-separator />
       <q-card class="bg-transparent">
         <q-card-section>
-          <q-input
-            v-for="(item, index) in formOpions.items"
-            :key="index"
-            :name="item.name"
-            :type="item.type"
-          >
-            <template v-slot:prepend>
-              <span class="text-caption">{{ item.title }}</span>
-            </template>
-          </q-input>
+          <q-form>
+            <q-input
+              v-for="(item, index) in formOpions.items"
+              :key="index"
+              :name="item.name"
+              :type="item.type"
+              v-model="refItemsModel[item.name]"
+            >
+              <template v-slot:prepend>
+                <span class="text-caption">{{ item.title }}</span>
+              </template>
+            </q-input>
+          </q-form>
         </q-card-section>
         <q-card-actions>
           <q-btn
@@ -26,7 +29,7 @@
             color="primary"
             icon="search"
             class="full-width"
-            @click="formOpions.onSearch()"
+            @click="formOpions.onSearch(refItemsModel)"
             >검색</q-btn
           >
         </q-card-actions>
@@ -35,21 +38,34 @@
   </q-list>
 </template>
 <script setup lang="ts">
-import { PropType } from 'vue';
+import { PropType, ref } from 'vue';
 
-export interface SearchForm {
-  items: {
-    name: string;
-    title: string;
-    type: string;
-  }[];
-  onSearch: () => void;
-}
-
-defineProps({
+const props = defineProps({
   formOpions: {
-    type: Object as PropType<SearchForm>,
+    type: Object as PropType<IFSearchForm>,
     required: true,
   },
 });
+export interface FormItem {
+  name: string;
+  title: string;
+  type: string;
+}
+
+const itemModelGen = () => {
+  let returnObj: {
+    [key: string]: string | number | null;
+  } = {};
+  for (let i = 0; i < props.formOpions.items.length; i++) {
+    let item = props.formOpions.items[i];
+    returnObj[item.name] = null;
+  }
+  return returnObj;
+};
+const refItemsModel = ref(itemModelGen());
+
+export interface IFSearchForm {
+  items: FormItem[];
+  onSearch: (refItemsModel: { [key: string]: string | number | null }) => void;
+}
 </script>
