@@ -49,13 +49,7 @@
                 }
               "
             />
-            <MainNoticeList
-              v-for="(notice, index) in mainNoticeData"
-              :key="index"
-              :title="notice.title"
-              :desc="notice.desc"
-              :meta="notice.meta"
-            />
+            <MainNoticeList :noticeList="mainNoticeData" />
             <ContSubTitle title="오시는 길" />
             <KakaoMap />
           </div>
