@@ -10,7 +10,9 @@
         clickable
         v-ripple
         active-class="bg-blue-1"
-        :active="refSelectedTm.tm_no === schedule.tm_no"
+        :active="
+          refSelectedTm != null && refSelectedTm.tm_no === schedule.tm_no
+        "
         @click="refSelectedTm = schedule"
         v-for="(schedule, index) in refTodayEvents"
         :key="index"
@@ -23,7 +25,9 @@
         <q-item-section
           >{{ schedule.rsv_num }}명/{{ schedule.al_num }}명</q-item-section
         >
-        <q-item-section side>{{ schedule.pr_nm }} 원</q-item-section>
+        <q-item-section side
+          >{{ parseInt(schedule.pr_nm).toLocaleString() }} 원</q-item-section
+        >
       </q-item>
     </q-list>
     <q-list
@@ -51,8 +55,26 @@
         <span class="text-caption">예약인원</span>
       </template>
       <template v-slot:append>
-        <q-btn flat class="bg-grey-3" @click="refHeadCount--">&#8722;</q-btn>
-        <q-btn flat class="bg-grey-3" @click="refHeadCount++">&#43;</q-btn>
+        <q-btn
+          flat
+          class="bg-blue-grey-6 text-white"
+          v-bind:class="{
+            disabled: refHeadCount === 1,
+          }"
+          @click="refHeadCount--"
+          >&#8722;</q-btn
+        >
+        <q-btn
+          flat
+          class="bg-blue-grey-6 text-white"
+          v-bind:class="{
+            disabled:
+              refSelectedTm &&
+              refHeadCount === refSelectedTm.al_num - refSelectedTm.rsv_num,
+          }"
+          @click="refHeadCount++"
+          >&#43;</q-btn
+        >
       </template>
     </q-input>
     <div class="flex no-wrap full-width q-mt-xl">
@@ -88,6 +110,9 @@ import { bkdSchdInfoStore } from 'src/stores/common';
 import { EventInput } from '@fullcalendar/core';
 import { tmCdToHHmm } from 'src/utils/cmcd';
 import axios from 'axios';
+import { useQuasar } from 'quasar';
+
+const $q = useQuasar();
 
 const bkdSchdInfo = bkdSchdInfoStore();
 const router = useRouter();
@@ -96,22 +121,64 @@ const refSelectedDay = ref<string | null>(null);
 const refHeadCount = ref<number>(1);
 const refPrvPlcAgr = ref<boolean>(false);
 
-const refSelectedTm: EventInput = ref({});
-
+const refSelectedTm: EventInput = ref(null);
 const refTodayEvents = ref<EventInput[]>([]);
 
-watch(refHeadCount, (newValue, oldValue) => {
-  console.log(oldValue, newValue);
-  console.log(
-    newValue > refSelectedTm.value.al_num - refSelectedTm.value.rsv_num
-  );
-  if (newValue > refSelectedTm.value.al_num - refSelectedTm.value.rsv_num) {
-    refHeadCount.value =
-      refSelectedTm.value.al_num - refSelectedTm.value.rsv_num;
-  }
+watch(refSelectedTm, (newValue) => {
+  if (newValue === null) return;
 
-  if (newValue < 1) {
-    refHeadCount.value = 1;
+  if (newValue.status === '휴항') {
+    refSelectedTm.value = null;
+    $q.notify({
+      message: '해당편은 휴항입니다',
+      icon: 'sentiment_very_dissatisfied',
+      position: 'top',
+      timeout: 1500,
+    });
+  } else if (newValue.al_num - newValue.rsv_num === 0) {
+    refSelectedTm.value = null;
+    $q.notify({
+      message: '해당편은 매진입니다',
+      icon: 'sentiment_very_dissatisfied',
+      position: 'top',
+      color: 'negative',
+      timeout: 1500,
+    });
+  }
+});
+
+watch(refHeadCount, (newValue) => {
+  if (refSelectedTm.value) {
+    if (refSelectedTm.value.al_num - refSelectedTm.value.rsv_num === 0) {
+      //예약불가
+      refHeadCount.value = 0;
+    } else if (
+      refSelectedTm.value &&
+      newValue > refSelectedTm.value.al_num - refSelectedTm.value.rsv_num
+    ) {
+      //최대인원
+      refHeadCount.value =
+        refSelectedTm.value.al_num - refSelectedTm.value.rsv_num;
+      $q.notify({
+        message: `해당편의 현재 최대 예약인원은 ${
+          refSelectedTm.value.al_num - refSelectedTm.value.rsv_num
+        }명 입니다`,
+        icon: 'sentiment_very_dissatisfied',
+        position: 'top',
+        color: 'negative',
+        timeout: 1500,
+      });
+    } else if (newValue < 1) {
+      //최소인원
+      refHeadCount.value = 1;
+      $q.notify({
+        message: '예약 최소인원은 1명입니다',
+        icon: 'sentiment_very_dissatisfied',
+        position: 'top',
+        color: 'negative',
+        timeout: 1500,
+      });
+    }
   }
 });
 
@@ -146,8 +213,6 @@ const calendarOptions = ref({
           yearMonth: yearMonth,
         })
         .then(function (response) {
-          console.log('response:::', response);
-
           const bgState: {
             [key: string]: boolean;
           } = {};
@@ -210,7 +275,6 @@ const calendarOptions = ref({
             });
           }
 
-          console.log('bgState::', bgState);
           calendarOptions.value.events = [...array, ...bgArray];
         });
 
@@ -226,7 +290,7 @@ const calendarOptions = ref({
 
   dateClick: (day: DateClickArg) => {
     refHeadCount.value = 1;
-    refSelectedTm.value = {};
+    refSelectedTm.value = null;
 
     const todayEvents = calendarOptions.value.events.filter((event) => {
       return day.dateStr === event.date && event.display != 'background';
