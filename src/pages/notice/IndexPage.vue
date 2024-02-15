@@ -6,7 +6,6 @@
 <script setup lang="ts">
 import MainNoticeList from '../../components/MainNoticeList.vue';
 import SearchForm from 'src/components/SearchForm.vue';
-import { title } from 'process';
 
 const formOptions = {
   items: [
