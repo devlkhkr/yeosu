@@ -85,8 +85,13 @@ const refSelectedTm: EventInput = ref('');
 const refTodayEvents = ref<EventInput[]>([]);
 
 const goRegCustInfo = () => {
-  if (refSelectedTm.value && refHeadCount.value && refPrvPlcAgr.value) {
-    bkdSchdInfo.operDate = refSelectedTm.value.tm_dt;
+  if (
+    refSelectedDay.value &&
+    refSelectedTm.value &&
+    refHeadCount.value &&
+    refPrvPlcAgr.value
+  ) {
+    bkdSchdInfo.operDate = refSelectedDay.value;
     bkdSchdInfo.operTime = refSelectedTm.value.tm_nm;
     bkdSchdInfo.custCnt = refHeadCount.value;
     bkdSchdInfo.ticketPrice = 100000;
