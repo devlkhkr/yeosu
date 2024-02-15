@@ -165,17 +165,15 @@ watch(refHeadCount, (newValue) => {
         }명 입니다`,
         icon: 'sentiment_very_dissatisfied',
         position: 'top',
-        color: 'negative',
         timeout: 1500,
       });
     } else if (newValue < 1) {
       //최소인원
       refHeadCount.value = 1;
       $q.notify({
-        message: '예약 최소인원은 1명입니다',
+        message: '최소 예약인원은 1명입니다',
         icon: 'sentiment_very_dissatisfied',
         position: 'top',
-        color: 'negative',
         timeout: 1500,
       });
     }
