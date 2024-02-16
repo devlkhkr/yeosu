@@ -38,10 +38,26 @@ import HeaderLayout from './HeaderLayout.vue';
 import FooterLayout from './FooterLayout.vue';
 import PageTitle from 'src/components/PageTitle.vue';
 import CircleBg from 'src/components/CircleBg.vue';
+import { QSpinnerDots, useQuasar } from 'quasar';
 
+const $q = useQuasar();
 const route = useRoute();
 const router = useRouter();
 const selectedMenu = ref(route.path || '/');
+
+router.beforeEach((to, from, next) => {
+  $q.loading.show({
+    spinner: QSpinnerDots,
+    spinnerSize: 64,
+  });
+  next();
+});
+
+router.afterEach(() => {
+  setTimeout(() => {
+    $q.loading.hide();
+  }, 300);
+});
 
 const MainLayout = styled('div')({
   maxWidth: '720px',
