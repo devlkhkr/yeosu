@@ -211,27 +211,29 @@ const calendarOptions = ref({
           yearMonth: yearMonth,
         })
         .then(function (response) {
+          console.log('repsonsedata:', response.data)
           const bgState: {
             [key: string]: boolean;
           } = {};
 
           for (let i = 0; i < response.data.length; i++) {
-            let status = '';
+            let status = response.data[i].st_nm;
             let statusClass = 'text-green';
             let rsv_num = response.data[i].rsv_num;
             let al_num = response.data[i].al_num;
             let color = '#3788d8';
-            if (response.data[i].st_cd == '01') {
-              status = '운항';
-              if (rsv_num == al_num) {
-                status = '매진';
-                color = '#e5556a';
+            
+            switch(response.data[i].st_cd) {
+              case '02':
+                statusClass = 'text-grey-6';
+                color = '#666';
+                break;
+              case '03':
                 statusClass = 'text-red';
-              }
-            } else {
-              status = '휴항';
-              color = '#666';
-              statusClass = 'text-grey-6';
+                color = '#e5556a';
+                break;
+              default :
+                break;
             }
 
             const event = {
@@ -249,9 +251,6 @@ const calendarOptions = ref({
               rsv_num: response.data[i].rsv_num,
               al_num: response.data[i].al_num,
               pr_nm: response.data[i].pr_nm,
-
-              // 타이틀의 아이콘 및 상태 표시 지우고 달력 여백에 N차 시간표시와 색상별 상태표기??
-              // 1차 = tm_cd == '01'의 dt_nm 값
             };
 
             if (!bgState[response.data[i].tm_dt]) {
