@@ -1,71 +1,114 @@
 <template>
   <div>
-    <q-list bordered class="rounded-borders">
-      <q-expansion-item
-        class="q-py-sm"
+    <q-list bordered separator class="rounded-borders">
+      <q-slide-item
         v-for="(qna, index) in refQnaList"
         :key="index"
+        @right="deleteQna"
+        right-color="red"
       >
-        <template v-slot:header>
-          <q-item-section side>
-            <span
-              class="text-caption"
-              v-bind:class="{
-                'text-green': qna.aDtl,
-              }"
-              >{{ qna.aDtl ? '답변완료' : '답변대기' }}</span
-            >
-          </q-item-section>
-
-          <q-item-section>
-            <div style="line-height: 1.25">
-              {{ qna.title }}
-            </div>
-            <div
-              class="flex text-caption text-grey-7 q-mt-sm"
-              style="gap: 12px"
-            >
-              <span>{{ qna.usrNm }}</span>
-              <q-separator vertical color="grey-3" />
-              <span>{{ qna.regDate }}</span>
-              <q-separator vertical color="grey-3" v-if="qna.prvtYn === 'Y'" />
-              <span class="flex items-center" style="gap: 4px"
-                ><q-icon
-                  :name="qna.prvtYn === 'Y' ? 'o_lock' : ''"
-                  color="amber"
-                /><span>{{ qna.prvtYn === 'Y' ? '비공개' : '' }}</span></span
-              >
-            </div>
-          </q-item-section>
+        <template v-slot:right>
+          <q-icon name="o_delete" />
         </template>
+        <q-item class="q-pa-none">
+          <q-expansion-item class="full-width">
+            <template v-slot:header>
+              <q-item class="full-width q-px-none q-py-md">
+                <q-item-section side>
+                  <span
+                    class="text-caption"
+                    v-bind:class="{
+                      'text-green': qna.aDtl,
+                    }"
+                    >{{ qna.aDtl ? '답변완료' : '답변대기' }}</span
+                  >
+                </q-item-section>
 
-        <q-card class="bg-b9c9df80 q-ma-sm" style="border-radius: 4px">
-          <q-card-section>
-            <p>
-              <span
-                class="text-h6 text-weight-medium text-grey q-mr-sm"
-                style="font-family: serif"
-                >Q.</span
-              >
-              {{ qna.qDtl }}
-            </p>
-            <p class="q-mt-md" v-if="qna.aDtl">
-              <span
-                class="text-h6 text-weight-medium text-grey q-mr-sm"
-                style="font-family: serif"
-                >A.</span
-              >
-              {{ qna.aDtl }}
-            </p>
-          </q-card-section>
-        </q-card>
-      </q-expansion-item>
+                <q-item-section>
+                  <div style="line-height: 1.25">
+                    {{ qna.title }}
+                  </div>
+                  <div
+                    class="flex text-caption text-grey-7 q-mt-sm"
+                    style="gap: 12px"
+                  >
+                    <span>{{ qna.usrNm }}</span>
+                    <q-separator vertical color="grey-3" />
+                    <span>{{ qna.regDate }}</span>
+                    <q-separator
+                      vertical
+                      color="grey-3"
+                      v-if="qna.prvtYn === 'Y'"
+                    />
+                    <span class="flex items-center" style="gap: 4px"
+                      ><q-icon
+                        :name="qna.prvtYn === 'Y' ? 'o_lock' : ''"
+                        color="amber"
+                      /><span>{{
+                        qna.prvtYn === 'Y' ? '비공개' : ''
+                      }}</span></span
+                    >
+                  </div>
+                </q-item-section>
+              </q-item>
+            </template>
+
+            <q-card class="bg-b9c9df80 q-ma-sm" style="border-radius: 4px">
+              <q-card-section>
+                <p>
+                  <span
+                    class="text-h6 text-weight-medium text-grey q-mr-sm"
+                    style="font-family: serif"
+                    >Q.</span
+                  >
+                  {{ qna.qDtl }}
+                </p>
+                <p class="q-mt-md" v-if="qna.aDtl">
+                  <span
+                    class="text-h6 text-weight-medium text-grey q-mr-sm"
+                    style="font-family: serif"
+                    >A.</span
+                  >
+                  {{ qna.aDtl }}
+                </p>
+              </q-card-section>
+            </q-card>
+          </q-expansion-item>
+        </q-item>
+      </q-slide-item>
     </q-list>
   </div>
+
+  <q-dialog v-model="refDeleteConfirm" persistent>
+    <q-card style="min-width: 350px">
+      <q-card-section>
+        <div class="text-body2">
+          질문을 삭제합니다.<br />등록시 설정한 비밀번호를 입력해주세요.
+        </div>
+      </q-card-section>
+
+      <q-card-section class="q-pt-none">
+        <q-input
+          dense
+          v-model="refQnaPwd"
+          autofocus
+          @keyup.enter="refDeleteConfirm = false"
+        />
+      </q-card-section>
+
+      <q-card-actions align="right" class="text-primary">
+        <q-btn flat label="취소" v-close-popup />
+        <q-btn flat label="확인" v-close-popup />
+      </q-card-actions>
+    </q-card>
+  </q-dialog>
 </template>
 
 <script setup lang="ts">
 import { ref } from 'vue';
+
+const refDeleteConfirm = ref<boolean>(false);
+const refQnaPwd = ref('');
 
 export interface QnAIF {
   title: string;
@@ -102,4 +145,9 @@ const refQnaList = ref<QnAIF[]>([
     aDtl: '답변 입니다. 222',
   },
 ]);
+
+const deleteQna = ({ reset }: { reset: () => void }) => {
+  refDeleteConfirm.value = true;
+  reset();
+};
 </script>
