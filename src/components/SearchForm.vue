@@ -10,17 +10,27 @@
       <q-card class="bg-transparent">
         <q-card-section>
           <q-form>
-            <q-input
-              v-for="(item, index) in formOpions.items"
-              :key="index"
-              :name="item.name"
-              :type="item.type"
-              v-model="refItemsModel[item.name]"
-            >
-              <template v-slot:prepend>
-                <span class="text-caption">{{ item.title }}</span>
-              </template>
-            </q-input>
+            <div v-for="(item, index) in formOpions.items" :key="index">
+              <q-input
+                v-if="item.type === 'string'"
+                :name="item.name"
+                :type="item.type"
+                v-model="refItemsModel[item.name]"
+              >
+                <template v-slot:prepend>
+                  <span class="text-caption">{{ item.title }}</span>
+                </template>
+              </q-input>
+              <q-select
+                v-else-if="item.type === 'select'"
+                v-model="refItemsModel[item.name]"
+                :options="item.selectOptions"
+              >
+                <template v-slot:prepend>
+                  <span class="text-caption">{{ item.selectTitle }}</span>
+                </template>
+              </q-select>
+            </div>
           </q-form>
         </q-card-section>
         <q-card-actions>
@@ -50,6 +60,11 @@ export interface FormItem {
   name: string;
   title: string;
   type: string;
+  selectTitle?: string;
+  selectOptions?: {
+    label: string;
+    value: string | number | null;
+  }[];
 }
 
 const itemModelGen = () => {

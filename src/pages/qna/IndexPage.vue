@@ -1,5 +1,6 @@
 <template>
-  <div>
+  <SearchForm :form-opions="formOptions" />
+  <div class="q-mt-lg">
     <q-list bordered separator class="rounded-borders">
       <q-slide-item
         v-for="(qna, index) in refQnaList"
@@ -116,9 +117,48 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { MaxWidthCont } from 'src/styled/common';
+import SearchForm, { IFSearchForm } from 'src/components/SearchForm.vue';
 const refDeleteConfirm = ref<boolean>(false);
 const hidePwd = ref<boolean>(true);
 const refQnaPwd = ref('');
+
+const formOptions: IFSearchForm = {
+  items: [
+    {
+      name: 'title',
+      title: '제목',
+      type: 'string',
+    },
+    {
+      name: 'usrNm',
+      title: '작성자',
+      type: 'string',
+    },
+    {
+      name: 'ansrStt',
+      title: '답변상태',
+      type: 'select',
+      selectTitle: '답변상태',
+      selectOptions: [
+        {
+          label: '전체',
+          value: 'all',
+        },
+        {
+          label: '답변대기',
+          value: '01',
+        },
+        {
+          label: '답변완료',
+          value: '02',
+        },
+      ],
+    },
+  ],
+  onSearch: (refItemsModel) => {
+    console.log(refItemsModel);
+  },
+};
 
 export interface QnAIF {
   title: string;
