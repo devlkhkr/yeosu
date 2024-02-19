@@ -80,40 +80,42 @@
   </div>
 
   <q-dialog v-model="refDeleteConfirm" persistent>
-    <q-card style="min-width: 350px">
-      <q-card-section>
-        <div class="text-body2">
-          질문을 삭제합니다.<br />등록시 설정한 비밀번호를 입력해주세요.
-        </div>
-      </q-card-section>
+    <MaxWidthCont>
+      <q-card>
+        <q-card-section>
+          <div class="text-body2">
+            질문을 삭제합니다.<br />등록시 설정한 비밀번호를 입력해주세요.
+          </div>
+        </q-card-section>
 
-      <q-card-section class="q-pt-none">
-        <q-input
-          v-model="refQnaPwd"
-          :type="hidePwd ? 'password' : 'text'"
-          @keyup.enter="refDeleteConfirm = false"
-        >
-          <template v-slot:append>
-            <q-icon
-              :name="hidePwd ? 'visibility_off' : 'visibility'"
-              class="cursor-pointer"
-              @click="hidePwd = !hidePwd"
-            />
-          </template>
-        </q-input>
-      </q-card-section>
+        <q-card-section class="q-pt-none">
+          <q-input
+            v-model="refQnaPwd"
+            :type="hidePwd ? 'password' : 'text'"
+            @keyup.enter="refDeleteConfirm = false"
+          >
+            <template v-slot:append>
+              <q-icon
+                :name="hidePwd ? 'visibility_off' : 'visibility'"
+                class="cursor-pointer"
+                @click="hidePwd = !hidePwd"
+              />
+            </template>
+          </q-input>
+        </q-card-section>
 
-      <q-card-actions align="right" class="text-primary">
-        <q-btn flat label="취소" v-close-popup />
-        <q-btn flat label="확인" v-close-popup />
-      </q-card-actions>
-    </q-card>
+        <q-card-actions align="right" class="text-primary">
+          <q-btn flat label="취소" v-close-popup />
+          <q-btn flat label="확인" v-close-popup />
+        </q-card-actions>
+      </q-card>
+    </MaxWidthCont>
   </q-dialog>
 </template>
 
 <script setup lang="ts">
 import { ref } from 'vue';
-
+import { MaxWidthCont } from 'src/styled/common';
 const refDeleteConfirm = ref<boolean>(false);
 const hidePwd = ref<boolean>(true);
 const refQnaPwd = ref('');
@@ -155,6 +157,7 @@ const refQnaList = ref<QnAIF[]>([
 ]);
 
 const deleteQna = ({ reset }: { reset: () => void }) => {
+  refQnaPwd.value = '';
   refDeleteConfirm.value = true;
   reset();
 };
