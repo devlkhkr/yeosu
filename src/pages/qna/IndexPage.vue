@@ -89,11 +89,18 @@
 
       <q-card-section class="q-pt-none">
         <q-input
-          dense
           v-model="refQnaPwd"
-          autofocus
+          :type="hidePwd ? 'password' : 'text'"
           @keyup.enter="refDeleteConfirm = false"
-        />
+        >
+          <template v-slot:append>
+            <q-icon
+              :name="hidePwd ? 'visibility_off' : 'visibility'"
+              class="cursor-pointer"
+              @click="hidePwd = !hidePwd"
+            />
+          </template>
+        </q-input>
       </q-card-section>
 
       <q-card-actions align="right" class="text-primary">
@@ -108,6 +115,7 @@
 import { ref } from 'vue';
 
 const refDeleteConfirm = ref<boolean>(false);
+const hidePwd = ref<boolean>(true);
 const refQnaPwd = ref('');
 
 export interface QnAIF {
