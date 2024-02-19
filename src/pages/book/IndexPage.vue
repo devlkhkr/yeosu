@@ -211,7 +211,7 @@ const calendarOptions = ref({
           yearMonth: yearMonth,
         })
         .then(function (response) {
-          console.log('repsonsedata:', response.data)
+          console.log('repsonsedata:', response.data);
           const bgState: {
             [key: string]: boolean;
           } = {};
@@ -222,8 +222,8 @@ const calendarOptions = ref({
             let rsv_num = response.data[i].rsv_num;
             let al_num = response.data[i].al_num;
             let color = '#3788d8';
-            
-            switch(response.data[i].st_cd) {
+
+            switch (response.data[i].st_cd) {
               case '02':
                 statusClass = 'text-grey-6';
                 color = '#666';
@@ -232,7 +232,7 @@ const calendarOptions = ref({
                 statusClass = 'text-red';
                 color = '#e5556a';
                 break;
-              default :
+              default:
                 break;
             }
 
@@ -240,9 +240,9 @@ const calendarOptions = ref({
               tm_no: response.data[i].tm_no,
               date: response.data[i].tm_dt,
               title:
-                status === '운항'
-                  ? response.data[i].tm_cd + '차 ' + rsv_num + '/' + al_num
-                  : response.data[i].tm_cd + '차 ' + status,
+                response.data[i].st_cd === '01'
+                  ? response.data[i].tm_nm + '-' + rsv_num + '명'
+                  : response.data[i].tm_nm + '-' + status,
               color: color,
               status: status,
               statusClass: statusClass,
