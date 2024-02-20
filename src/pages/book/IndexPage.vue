@@ -21,12 +21,12 @@
           schedule.status
         }}</q-item-section>
 
-        <q-item-section>{{ tmCdToHHmm(schedule.tm_cd) }}</q-item-section>
+        <q-item-section>{{ schedule.hhmm }}</q-item-section>
         <q-item-section
-          >{{ schedule.rsv_num }}명/{{ schedule.al_num }}명</q-item-section
+          >{{ schedule.rsv_num }}명/{{ schedule.al_rsv_num }}명</q-item-section
         >
         <q-item-section side
-          >{{ parseInt(schedule.pr_nm).toLocaleString() }} 원</q-item-section
+          >{{ parseInt(schedule.price).toLocaleString() }} 원</q-item-section
         >
       </q-item>
     </q-list>
@@ -70,7 +70,7 @@
           v-bind:class="{
             disabled:
               refSelectedTm &&
-              refHeadCount === refSelectedTm.al_num - refSelectedTm.rsv_num,
+              refHeadCount === refSelectedTm.al_rsv_num - refSelectedTm.rsv_num,
           }"
           @click="refHeadCount++"
           >&#43;</q-btn
@@ -108,7 +108,7 @@ import { DatesSetArg } from '@fullcalendar/core';
 import { useRouter } from 'vue-router';
 import { bkdSchdInfoStore } from 'src/stores/common';
 import { EventInput } from '@fullcalendar/core';
-import { tmCdToHHmm } from 'src/utils/cmcd';
+// import { tmCdToHHmm } from 'src/utils/cmcd';
 import axios from 'axios';
 import { useQuasar } from 'quasar';
 
@@ -135,7 +135,7 @@ watch(refSelectedTm, (newValue) => {
       position: 'top',
       timeout: 1500,
     });
-  } else if (newValue.al_num - newValue.rsv_num === 0) {
+  } else if (newValue.al_rsv_num - newValue.rsv_num === 0) {
     refSelectedTm.value = null;
     $q.notify({
       message: '해당편은 매진입니다',
@@ -149,19 +149,19 @@ watch(refSelectedTm, (newValue) => {
 
 watch(refHeadCount, (newValue) => {
   if (refSelectedTm.value) {
-    if (refSelectedTm.value.al_num - refSelectedTm.value.rsv_num === 0) {
+    if (refSelectedTm.value.al_rsv_num - refSelectedTm.value.rsv_num === 0) {
       //예약불가
       refHeadCount.value = 0;
     } else if (
       refSelectedTm.value &&
-      newValue > refSelectedTm.value.al_num - refSelectedTm.value.rsv_num
+      newValue > refSelectedTm.value.al_rsv_num - refSelectedTm.value.rsv_num
     ) {
       //최대인원
       refHeadCount.value =
-        refSelectedTm.value.al_num - refSelectedTm.value.rsv_num;
+        refSelectedTm.value.al_rsv_num - refSelectedTm.value.rsv_num;
       $q.notify({
         message: `해당편의 현재 최대 예약인원은 ${
-          refSelectedTm.value.al_num - refSelectedTm.value.rsv_num
+          refSelectedTm.value.al_rsv_num - refSelectedTm.value.rsv_num
         }명 입니다`,
         icon: 'sentiment_very_dissatisfied',
         position: 'top',
@@ -188,9 +188,9 @@ const goRegCustInfo = () => {
     refPrvPlcAgr.value
   ) {
     bkdSchdInfo.operDate = refSelectedDay.value;
-    bkdSchdInfo.operTime = refSelectedTm.value.tm_nm;
+    bkdSchdInfo.operTime = refSelectedTm.value.hhmm;
     bkdSchdInfo.custCnt = refHeadCount.value;
-    bkdSchdInfo.ticketPrice = refSelectedTm.value.pr_nm;
+    bkdSchdInfo.ticketPrice = refSelectedTm.value.price;
   }
 
   router.push('/book/regCustInfo');
@@ -220,7 +220,7 @@ const calendarOptions = ref({
             let status = response.data[i].st_nm;
             let statusClass = 'text-green';
             let rsv_num = response.data[i].rsv_num;
-            let al_num = response.data[i].al_num;
+            let al_rsv_num = response.data[i].al_rsv_num;
             let color = '#3788d8';
 
             switch (response.data[i].st_cd) {
@@ -241,21 +241,21 @@ const calendarOptions = ref({
               date: response.data[i].tm_dt,
               title:
                 response.data[i].st_cd === '01'
-                  ? response.data[i].tm_nm + '-' + rsv_num + '명'
-                  : response.data[i].tm_nm + '-' + status,
+                  ? response.data[i].hhmm + '-' + rsv_num + '명'
+                  : response.data[i].hhmm + '-' + status,
               color: color,
               status: status,
               statusClass: statusClass,
-              tm_cd: response.data[i].tm_cd,
-              tm_nm: response.data[i].tm_nm,
-              rsv_num: response.data[i].rsv_num,
-              al_num: response.data[i].al_num,
-              pr_nm: response.data[i].pr_nm,
+              hhmm: response.data[i].hhmm,
+              rsv_num: rsv_num,
+              al_rsv_num: al_rsv_num,
+              price: response.data[i].price,
             };
 
             if (!bgState[response.data[i].tm_dt]) {
               bgState[response.data[i].tm_dt] =
-                response.data[i].st_nm === '운행' && rsv_num < al_num
+                response.data[i].st_cd === '01' &&
+                parseInt(rsv_num) < parseInt(al_rsv_num)
                   ? true
                   : false;
             }
