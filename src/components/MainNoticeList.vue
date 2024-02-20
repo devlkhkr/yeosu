@@ -3,8 +3,10 @@
     <q-list separator>
       <q-item
         v-for="(notice, index) in noticeList"
+        clickable
         :key="index"
         class="q-py-md q-px-sm"
+        @click="$router.push(`/notice/detail/${notice.id}`)"
       >
         <q-item-section>
           <q-item-label>{{ notice.title }}</q-item-label>
@@ -25,6 +27,7 @@
 import { PropType } from 'vue';
 
 export interface Notice {
+  id: string;
   title: string;
   desc?: string;
   meta?: string;

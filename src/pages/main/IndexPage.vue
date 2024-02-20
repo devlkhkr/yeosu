@@ -69,16 +69,19 @@ import KakaoMap from 'src/pages/main/KakaoMap.vue';
 
 const mainNoticeData = [
   {
+    id: '1',
     title: '공지사항1 제목',
     desc: '공지사항1 내용',
     meta: '2024-01-01',
   },
   {
+    id: '2',
     title: '공지사항2 제목',
     desc: '공지사항2 내용',
     meta: '2024-01-01',
   },
   {
+    id: '3',
     title: '공지사항3 제목',
     desc: '공지사항3 내용',
     meta: '2024-01-01',

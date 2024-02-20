@@ -10,7 +10,7 @@
     </div>
     <div v-if="showMore" class="full-width">
       <div
-        class="flex items-center justify-end text-grey-6 text-caption"
+        class="flex items-center justify-end text-grey-6 text-caption cursor-pointer"
         @click="
           () => {
             if (showMore) {

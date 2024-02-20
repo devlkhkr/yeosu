@@ -21,6 +21,11 @@ const routes: RouteRecordRaw[] = [
         component: () => import('pages/notice/IndexPage.vue'),
         name: '공지사항',
       },
+      {
+        path: 'detail/:noticeId?',
+        component: () => import('pages/notice/NoticeDetail.vue'),
+        name: '공지사항 상세',
+      },
     ],
   },
   {
