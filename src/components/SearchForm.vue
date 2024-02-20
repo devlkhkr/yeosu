@@ -160,8 +160,8 @@ const itemModelGen = () => {
       };
     } else if (item.type === 'select') {
       returnObj[item.name] = {
-        label: '',
-        value: '',
+        label: item.selectOptions ? item.selectOptions[0].label : '',
+        value: item.selectOptions ? item.selectOptions[0].value : '',
       };
     } else {
       returnObj[item.name] = {
