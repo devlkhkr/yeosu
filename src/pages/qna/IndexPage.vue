@@ -138,7 +138,6 @@ const formOptions: IFSearchForm = {
       name: 'ansrStt',
       title: '답변상태',
       type: 'select',
-      selectTitle: '답변상태',
       selectOptions: [
         {
           label: '전체',
@@ -153,6 +152,11 @@ const formOptions: IFSearchForm = {
           value: '02',
         },
       ],
+    },
+    {
+      name: 'regDate',
+      title: '작성일자',
+      type: 'period',
     },
   ],
   onSearch: (refItemsModel) => {
