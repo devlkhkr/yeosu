@@ -146,7 +146,7 @@
         </div>
       </q-expansion-item>
     </q-list>
-    <WaveButton class="q-mt-lg" title="예약하기" @click="book"/>
+    <WaveButton class="q-mt-lg" title="예약하기" @click="book" />
 
     <q-dialog v-model="newAddress">
       <MaxWidthCont>
@@ -185,11 +185,16 @@ const custConfig: BookedCustInfo = {
   postCode: '',
   roadAddr: '',
   dtlAddr: '',
+  tm_no: bkdSchdInfo.tm_no,
+  rv_cd: bkdSchdInfo.rv_cd,
   isSameAddrWithOwner: false,
 };
 
 const custInfo = ref<BookedCustInfo[]>(
-  Array.from({ length: bkdSchdInfo.custCnt }, () => ({ ...custConfig }))
+  Array.from({ length: bkdSchdInfo.custCnt }, (value, index) => ({
+    ...custConfig,
+    us_cd: index === 0 ? '01' : '02',
+  }))
 );
 
 const setCustAddr = (data: { [key: string]: string }) => {
@@ -199,12 +204,10 @@ const setCustAddr = (data: { [key: string]: string }) => {
 };
 
 const book = () => {
-  axios
-  .post(`${process.env.API_URL}/book`, custInfo.value)
-  .then((response) => {
-    console.log('response.data::' + response.data)
-  router.push('/book/regCustInfo');
-  })
+  console.log('custInfo.value:', custInfo.value);
+  axios.post(`${process.env.API_URL}/book`, custInfo.value).then((response) => {
+    console.log('response.data::' + response.data);
+    router.push('/book/regCustInfo');
+  });
 };
-
 </script>

@@ -19,11 +19,12 @@ export const drawerOpenState = defineStore('drawerOpen', {
 //Booked Schedule Info Store
 export const bkdSchdInfoStore = defineStore('bkdSchdInfoStore', {
   state: () => ({
-    tmNo: null,
+    tm_no: '',
     operDate: '',
     operTime: '',
     custCnt: 0,
     ticketPrice: 0,
+    rv_cd: '',
   }),
   getters: {},
   actions: {},

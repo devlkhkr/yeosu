@@ -1,5 +1,10 @@
 <template>
-  <div class="cardWrap" v-for="(ticket, index) in tickets" :key="index">
+  <div
+    class="cardWrap"
+    v-for="(ticket, index) in tickets"
+    :key="index"
+    @click="$router.push(`/book/myTicketDetail/${ticket.rsvNo}`)"
+  >
     <div class="card cardLeft">
       <span class="ticket_title">예약번호: {{ ticket.rsvNo }}</span>
       <div class="title">

@@ -42,6 +42,11 @@ const routes: RouteRecordRaw[] = [
         component: () => import('pages/book/RegCustInfo.vue'),
         name: '예약정보 입력',
       },
+      {
+        path: 'myTicketDetail/:rsvNo?',
+        component: () => import('pages/book/MyTicketDetail.vue'),
+        name: '나의 예약정보 상세',
+      },
     ],
   },
   {
