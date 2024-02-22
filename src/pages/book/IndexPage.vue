@@ -252,7 +252,7 @@ const calendarOptions = ref({
               rsv_num: rsv_num,
               al_rsv_num: al_rsv_num,
               price: response.data[i].price,
-              rv_cd: rsv_num === al_rsv_num ? '02' : '01',
+              rv_cd: response.data[i].st_cd === '03' ? '02' : '01',
             };
 
             if (!bgState[response.data[i].tm_dt]) {

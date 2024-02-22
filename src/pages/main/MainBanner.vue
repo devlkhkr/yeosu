@@ -4,7 +4,8 @@
     <img src="../../assets/banner.jpeg" />
     <div class="banner_txt">
       <div class="banner_tit">Yeosu</div>
-      <div class="banner_desc">아름다운 여수바다 크루즈 투어</div>
+      <div class="banner_desc">아름다운 여수바다 선상 투어</div>
+      <div class="banner_desc">낭도 - 추도 구간운항</div>
       <div class="banner_deco"></div>
     </div>
   </StyledMainBanner>

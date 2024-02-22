@@ -66,6 +66,8 @@ import MainBanner from './MainBanner.vue';
 import WaveButton from 'src/components/WaveButton.vue';
 import CircleBg from 'src/components/CircleBg.vue';
 import KakaoMap from 'src/pages/main/KakaoMap.vue';
+import axios from 'axios';
+import { onMounted } from 'vue';
 
 const mainNoticeData = [
   {
@@ -87,4 +89,16 @@ const mainNoticeData = [
     meta: '2024-01-01',
   },
 ];
+
+onMounted(() => {
+  axios
+    .post(`${process.env.API_URL}/getNoticeList`, {
+      currPage: '1',
+      perPage: '3',
+      boCd: '01',
+    })
+    .then((response) => {
+      console.log(response.data);
+    });
+});
 </script>
