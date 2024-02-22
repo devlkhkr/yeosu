@@ -1,7 +1,17 @@
 <template>
   <StyledMainBanner>
-    <!-- <img src="../../assets/banner.jpeg" /> -->
-    <img src="../../assets/banner.jpeg" />
+    <Flicking
+      :options="{ align: 'prev', circular: true }"
+      :plugins="plugins"
+      class="product_img_slider"
+    >
+      <div class="panel" v-for="(img, index) in 3" :key="index">
+        <img src="../../assets/banner.jpeg" />
+      </div>
+      <template #viewport>
+        <div class="flicking-pagination"></div>
+      </template>
+    </Flicking>
     <div class="banner_txt">
       <div class="banner_tit">Yeosu</div>
       <div class="banner_desc">아름다운 여수바다 선상 투어</div>
@@ -12,16 +22,25 @@
 </template>
 <script setup lang="ts">
 import { styled } from 'emotion-vuejs';
+import Flicking from '@egjs/vue3-flicking';
+import { Pagination } from '@egjs/flicking-plugins';
+import '@egjs/vue3-flicking/dist/flicking.css';
+
+const plugins = [new Pagination({ type: 'bullet' })];
 
 const StyledMainBanner = styled('div')({
   position: 'relative',
   height: 320,
   overflow: 'hidden',
+  '.panel': {
+    background: 'red',
+  },
   img: {
     width: '100%',
     height: '100%',
     objectFit: 'cover',
     objectPosition: 'center',
+    userSelect: 'none',
   },
   '.banner_txt': {
     position: 'absolute',
