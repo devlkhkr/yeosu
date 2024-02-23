@@ -1,12 +1,19 @@
 <template>
   <StyledMainBanner>
     <Flicking
-      :options="{ align: 'prev', circular: true }"
+      :options="{
+        align: 'next',
+        circular: true,
+        defaultIndex: 0,
+      }"
       :plugins="plugins"
       class="product_img_slider"
     >
-      <div class="panel" v-for="(img, index) in 3" :key="index">
+      <div class="panel">
         <img src="../../assets/banner.jpeg" />
+      </div>
+      <div class="panel">
+        <img src="../../assets/banner2.jpg" />
       </div>
       <template #viewport>
         <div class="flicking-pagination"></div>
@@ -23,10 +30,12 @@
 <script setup lang="ts">
 import { styled } from 'emotion-vuejs';
 import Flicking from '@egjs/vue3-flicking';
-import { Pagination } from '@egjs/flicking-plugins';
 import '@egjs/vue3-flicking/dist/flicking.css';
+import { AutoPlay } from '@egjs/flicking-plugins';
 
-const plugins = [new Pagination({ type: 'bullet' })];
+const plugins = [
+  new AutoPlay({ duration: 3000, direction: 'NEXT', stopOnHover: false }),
+];
 
 const StyledMainBanner = styled('div')({
   position: 'relative',
