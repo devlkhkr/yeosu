@@ -30,11 +30,8 @@ const plugins = [new Pagination({ type: 'bullet' })];
 
 const StyledMainBanner = styled('div')({
   position: 'relative',
-  height: 320,
+  maxHeight: 320,
   overflow: 'hidden',
-  '.panel': {
-    background: 'red',
-  },
   img: {
     width: '100%',
     height: '100%',
@@ -46,6 +43,7 @@ const StyledMainBanner = styled('div')({
     position: 'absolute',
     left: 0,
     top: '50%',
+    zIndex: 1,
     transform: 'translate(0, -50%)',
     padding: '20px 48px 20px 20px',
     backdropFilter: 'blur(2px)',
