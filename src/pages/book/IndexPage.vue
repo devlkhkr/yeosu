@@ -1,4 +1,10 @@
 <template>
+  <div class="q-mb-md">
+    <DirectionInfo directionText="낭도 -> 추도" bgColor="#A5C9FF">
+    </DirectionInfo>
+    <DirectionInfo directionText="추도 -> 낭도" bgColor="#0C70F2">
+    </DirectionInfo>
+  </div>
   <FullCalendar :options="calendarOptions" />
   <div class="q-mt-lg text-caption">
     <q-list
@@ -17,10 +23,13 @@
         v-for="(schedule, index) in refTodayEvents"
         :key="index"
       >
-        <q-item-section :class="`${schedule.statusClass}`">{{
-          schedule.status
-        }}</q-item-section>
-
+        <q-item-section
+          side
+          :class="`${schedule.statusClass}`"
+          class="q-mr-none"
+          >{{ schedule.status }}</q-item-section
+        >
+        <q-item-section class="q-ml-none">{{ schedule.wy_nm }}</q-item-section>
         <q-item-section>{{ schedule.hhmm }}</q-item-section>
         <q-item-section
           >{{ schedule.rsv_num }}명/{{ schedule.al_rsv_num }}명</q-item-section
@@ -111,6 +120,7 @@ import { EventInput } from '@fullcalendar/core';
 // import { tmCdToHHmm } from 'src/utils/cmcd';
 import axios from 'axios';
 import { useQuasar } from 'quasar';
+import DirectionInfo from '../../components/DirectionInfo.vue';
 
 const $q = useQuasar();
 
@@ -223,7 +233,7 @@ const calendarOptions = ref({
             let statusClass = 'text-green';
             let rsv_num = response.data[i].rsv_num;
             let al_rsv_num = response.data[i].al_rsv_num;
-            let color = '#3788d8';
+            let color = '#A5C9FF';
 
             switch (response.data[i].st_cd) {
               case '02':
@@ -235,6 +245,14 @@ const calendarOptions = ref({
                 color = '#e5556a';
                 break;
               default:
+                switch (response.data[i].wy_cd) {
+                  case '01':
+                    color = '#A5C9FF';
+                    break;
+                  default:
+                    color = '#0C70F2';
+                    break;
+                }
                 break;
             }
 
@@ -253,6 +271,7 @@ const calendarOptions = ref({
               al_rsv_num: al_rsv_num,
               price: response.data[i].price,
               rv_cd: response.data[i].st_cd === '03' ? '02' : '01',
+              wy_nm: response.data[i].wy_nm,
             };
 
             if (!bgState[response.data[i].tm_dt]) {
