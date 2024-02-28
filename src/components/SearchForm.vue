@@ -10,7 +10,7 @@
       <q-card class="bg-transparent">
         <q-card-section>
           <q-form>
-            <div v-for="(item, index) in formOpions.items" :key="index">
+            <div v-for="(item, index) in formOptions.items" :key="index">
               <q-input
                 v-if="item.type === 'string'"
                 :name="item.name"
@@ -111,7 +111,7 @@
             color="primary"
             icon="search"
             class="full-width"
-            @click="formOpions.onSearch(refItemsModel)"
+            @click="formOptions.onSearch(refItemsModel)"
             >검색</q-btn
           >
         </q-card-actions>
@@ -123,7 +123,7 @@
 import { PropType, ref } from 'vue';
 
 const props = defineProps({
-  formOpions: {
+  formOptions: {
     type: Object as PropType<IFSearchForm>,
     required: true,
   },
@@ -150,8 +150,8 @@ export interface ItemModels {
 
 const itemModelGen = () => {
   let returnObj: ItemModels = {};
-  for (let i = 0; i < props.formOpions.items.length; i++) {
-    let item = props.formOpions.items[i];
+  for (let i = 0; i < props.formOptions.items.length; i++) {
+    let item = props.formOptions.items[i];
 
     if (item.type === 'period') {
       returnObj[item.name] = {

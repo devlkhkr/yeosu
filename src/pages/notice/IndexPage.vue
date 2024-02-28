@@ -1,12 +1,19 @@
 <template>
-  <SearchForm :form-opions="formOptions" />
-  <MainNoticeList :noticeList="mainNoticeData" class="q-mt-lg" />
+  <SearchForm :form-options="formOptions" />
+  <q-infinite-scroll @load="onLoad" :offset="250">
+    <MainNoticeList :noticeList="mainNoticeData" class="q-mt-lg" />
+    <template v-slot:loading>
+      <div class="row justify-center q-my-md">
+        <q-spinner-dots color="primary" size="40px" />
+      </div>
+    </template>
+  </q-infinite-scroll>
 </template>
 
 <script setup lang="ts">
 import MainNoticeList from '../../components/MainNoticeList.vue';
 import SearchForm, { IFSearchForm } from 'src/components/SearchForm.vue';
-import { onMounted } from 'vue';
+// import { onMounted } from 'vue';
 import axios from 'axios';
 import { Notice } from 'src/components/MainNoticeList.vue';
 import { ref } from 'vue';
@@ -31,24 +38,36 @@ const formOptions: IFSearchForm = {
 
 const mainNoticeData = ref<Notice[]>([]);
 
-onMounted(() => {
-  axios
-    .post(`${process.env.API_URL}/getBoardList`, {
-      currPage: '1',
-      perPage: '7',
-      boCd: '01',
-    })
-    .then(function (response) {
-      for (let i = 0; i < response.data.length; i++) {
-        const notice = {
-          id: response.data[i].boCd,
-          title: response.data[i].boTi,
-          desc: response.data[i].boCont,
-          meta: response.data[i].boDt,
-        };
+let currPage = 1;
 
-        mainNoticeData.value.push(notice);
-      }
-    });
-});
+const onLoad = (index, done) => {
+  console.log(index);
+  console.log(done);
+  index++;
+  // setTimeout(() => {
+  //   axios
+  //     .post(`${process.env.API_URL}/getBoardList`, {
+  //       currPage: currPage,
+  //       perPage: '3',
+  //       boCd: '01',
+  //     })
+  //     .then((response) => {
+  //       if (response.data.length > 0) {
+  //         currPage++;
+  //         console.log('responsedata', response.data);
+  //         console.log('currPage:', currPage);
+  //         for (let i = 0; i < response.data.length; i++) {
+  //           const notice = {
+  //             id: response.data[i].boCd,
+  //             title: response.data[i].boTi,
+  //             desc: response.data[i].boCont,
+  //             meta: response.data[i].boDt,
+  //           };
+  //           mainNoticeData.value.push(notice);
+  //         }
+  //       }
+  //     });
+  //   done();
+  // }, 2000);
+};
 </script>
