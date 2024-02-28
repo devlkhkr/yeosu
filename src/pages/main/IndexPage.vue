@@ -66,39 +66,31 @@ import MainBanner from './MainBanner.vue';
 import WaveButton from 'src/components/WaveButton.vue';
 import CircleBg from 'src/components/CircleBg.vue';
 import KakaoMap from 'src/pages/main/KakaoMap.vue';
-// import axios from 'axios';
+import axios from 'axios';
 import { onMounted } from 'vue';
+import { Notice } from 'src/components/MainNoticeList.vue';
+import { ref } from 'vue';
 
-const mainNoticeData = [
-  {
-    id: '1',
-    title: '공지사항1 제목',
-    desc: '공지사항1 내용',
-    meta: '2024-01-01',
-  },
-  {
-    id: '2',
-    title: '공지사항2 제목',
-    desc: '공지사항2 내용',
-    meta: '2024-01-01',
-  },
-  {
-    id: '3',
-    title: '공지사항3 제목',
-    desc: '공지사항3 내용',
-    meta: '2024-01-01',
-  },
-];
+const mainNoticeData = ref<Notice[]>([]);
 
 onMounted(() => {
-  // axios
-  //   .post(`${process.env.API_URL}/getNoticeList`, {
-  //     currPage: '1',
-  //     perPage: '3',
-  //     boCd: '01',
-  //   })
-  //   .then((response) => {
-  //     console.log(response.data);
-  //   });
+  axios
+    .post(`${process.env.API_URL}/getBoardList`, {
+      currPage: '1',
+      perPage: '3',
+      boCd: '01',
+    })
+    .then(function (response) {
+      for (let i = 0; i < response.data.length; i++) {
+        const notice = {
+          id: response.data[i].boCd,
+          title: response.data[i].boTi,
+          desc: response.data[i].boCont,
+          meta: response.data[i].boDt,
+        };
+
+        mainNoticeData.value.push(notice);
+      }
+    });
 });
 </script>

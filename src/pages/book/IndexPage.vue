@@ -117,7 +117,6 @@ import { DatesSetArg } from '@fullcalendar/core';
 import { useRouter } from 'vue-router';
 import { bkdSchdInfoStore } from 'src/stores/common';
 import { EventInput } from '@fullcalendar/core';
-// import { tmCdToHHmm } from 'src/utils/cmcd';
 import axios from 'axios';
 import { useQuasar } from 'quasar';
 import DirectionInfo from '../../components/DirectionInfo.vue';
@@ -213,6 +212,7 @@ const calendarOptions = ref({
   initialView: 'dayGridMonth',
   // 현재 달에 해당하는 일자만 표시
   showNonCurrentDates: false,
+
   datesSet: (month: DatesSetArg) => {
     if (month) {
       const yearMonth = month.startStr.substring(0, 7);
