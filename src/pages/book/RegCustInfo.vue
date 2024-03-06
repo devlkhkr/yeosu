@@ -167,13 +167,13 @@ import { BookedCustInfo } from 'src/types/cust';
 import { VueDaumPostcode } from 'vue-daum-postcode';
 import { MaxWidthCont } from 'src/styled/common';
 import WaveButton from 'src/components/WaveButton.vue';
-import { useRouter } from 'vue-router';
+// import { useRouter } from 'vue-router';
 import axios from 'axios';
 
 const newAddress = ref(false);
 const newAddrIdx = ref(0);
 
-const router = useRouter();
+// const router = useRouter();
 
 const bkdSchdInfo = bkdSchdInfoStore();
 const amount = bkdSchdInfo.ticketPrice * bkdSchdInfo.custCnt;
@@ -206,8 +206,8 @@ const setCustAddr = (data: { [key: string]: string }) => {
 const book = () => {
   console.log('custInfo.value:', custInfo.value);
   axios.post(`${process.env.API_URL}/book`, custInfo.value).then((response) => {
-    console.log('response.data::' + response.data);
-    router.push('/book/regCustInfo');
+    console.log('response.data::' , response);
+    // router.push('/book/regCustInfo');
   });
 };
 </script>

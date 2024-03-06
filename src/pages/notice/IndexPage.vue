@@ -22,14 +22,15 @@ const formOptions: IFSearchForm = {
       title: '제목',
       type: 'string',
     },
-    {
-      name: 'boPeriod',
-      title: '기간',
-      type: 'period',
-    },
+    // {
+    //   name: 'boPeriod',
+    //   title: '기간',
+    //   type: 'period',
+    // },
   ],
   onSearch: (refItemsModel) => {
     console.log(refItemsModel);
+    console.log('boTi', refItemsModel.boTi);
   },
 };
 

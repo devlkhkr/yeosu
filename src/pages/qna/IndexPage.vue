@@ -1,5 +1,5 @@
 <template>
-  <SearchForm :form-opions="formOptions" />
+  <SearchForm :form-options="formOptions" />
   <div class="q-mt-lg">
     <q-list bordered separator class="rounded-borders">
       <q-slide-item
