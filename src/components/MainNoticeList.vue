@@ -10,7 +10,7 @@
       >
         <q-item-section>
           <q-item-label>{{ notice.title }}</q-item-label>
-          <q-item-label v-if="notice.desc" caption>{{
+          <q-item-label caption lines="1" v-if="notice.desc">{{
             notice.desc
           }}</q-item-label>
         </q-item-section>

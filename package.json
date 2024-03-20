@@ -24,6 +24,7 @@
     "axios": "^1.6.7",
     "core-js": "^3.31.1",
     "emotion-vuejs": "^1.0.5",
+    "lodash": "^4.17.21",
     "pinia": "^2.0.11",
     "pinia-plugin-persistedstate": "^3.2.1",
     "quasar": "^2.8.0",
