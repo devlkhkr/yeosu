@@ -83,7 +83,7 @@ onMounted(() => {
     .then(function (response) {
       for (let i = 0; i < response.data.length; i++) {
         const notice = {
-          id: response.data[i].boCd,
+          id: response.data[i].boNo,
           title: response.data[i].boTi,
           desc: response.data[i].boCont,
           meta: response.data[i].boDt,
