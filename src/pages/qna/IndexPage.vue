@@ -210,7 +210,9 @@ import { ref } from 'vue';
 import { MaxWidthCont } from 'src/styled/common';
 import SearchForm, { IFSearchForm } from 'src/components/SearchForm.vue';
 import axios from 'axios';
+import { useQuasar } from 'quasar';
 
+const $q = useQuasar();
 const refDeleteConfirm = ref<boolean>(false);
 const writeQna = ref<boolean>(false);
 const hidePwd = ref<boolean>(true);
@@ -278,10 +280,19 @@ const refQnA = ref<QnAIF>({
   aDtl: '',
 });
 
+const searchForm = ref({
+  title: '',
+  usrNm: '',
+  ansrStt: '',
+  fromDate: '',
+  toDate: '',
+});
+
 const resetRefQnA = () => {
   refQnA.value.title = '';
   refQnA.value.usrNm = '';
   refQnA.value.regDate = '';
+  refQnA.value.pwd = '';
   refQnA.value.prvtYn = false;
   refQnA.value.qDtl = '';
   refQnA.value.aDtl = '';
@@ -289,7 +300,7 @@ const resetRefQnA = () => {
 
 const regQnA = () => {
   axios
-    .post(`${process.env.API_URL}/regQnA`, {
+    .post(`${process.env.API_URL}/regBoard`, {
       boCd: '02',
       boTi: refQnA.value.title,
       usrNm: refQnA.value.usrNm,
@@ -298,7 +309,23 @@ const regQnA = () => {
       boCont: refQnA.value.qDtl,
     })
     .then(function (response) {
-      console.log('QnAResponse::', response.data);
+      // console.log('QnAResponse::', response.data);
+      if (response.data.state === '1') {
+        $q.notify({
+          message: response.data.message,
+          type: 'positive',
+          position: 'top',
+          timeout: 1500,
+        });
+        resetRefQnA();
+      } else {
+        $q.notify({
+          message: response.data.message,
+          type: 'negative',
+          position: 'top',
+          timeout: 1500,
+        });
+      }
     });
 };
 
@@ -331,6 +358,46 @@ const refQnaList = ref<QnAIF[]>([
     aDtl: '답변 입니다. 222',
   },
 ]);
+
+let currPage = 1;
+const perPage = 10;
+let flag = true;
+
+const loadData = () => {
+  axios
+    .post<{ boCd: string; boTi: string; boCont: string; boDt: string }[]>(
+      `${process.env.API_URL}/getBoardList`,
+      {
+        currPage: currPage,
+        perPage: String(perPage),
+        boCd: '02',
+        boTi: searchForm.value.title,
+        usrNm: searchForm.value.usrNm,
+        ansrStt: searchForm.value.ansrStt,
+        fromDate: searchForm.value.fromDate,
+        toDate: searchForm.value.toDate,
+      }
+    )
+    .then((response) => {
+      if (response.data.length > 0) {
+        //   mainNoticeData.value = [
+        //     ...mainNoticeData.value,
+        //     ...response.data.map((item) => ({
+        //       id: item.boNo,
+        //       title: item.boTi,
+        //       desc: item.boCont,
+        //       meta: item.boDt,
+        //     })),
+        //   ];
+        //   if (response.data.length < perPage) {
+        //     flag = false;
+        //   }
+        //   currPage++;
+        // } else {
+        //   flag = false;
+      }
+    });
+};
 
 const deleteQna = ({ reset }: { reset: () => void }) => {
   refQnaPwd.value = '';

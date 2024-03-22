@@ -26,7 +26,7 @@ const loadData = () => {
     })
     .then(function (response) {
       notice.value = {
-        id: response.data.boCd,
+        id: response.data.boNo,
         title: response.data.boTi,
         desc: response.data.boCont,
         meta: response.data.boDt,
