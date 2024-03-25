@@ -10,9 +10,9 @@
   <div class="q-mt-lg">
     <q-list bordered separator class="rounded-borders">
       <q-slide-item
-        v-for="(qna, index) in refQnaList"
+        v-for="(qna, index) in refQnAList"
         :key="index"
-        @right="deleteQna"
+        @right="deleteQnA"
         right-color="red"
       >
         <template v-slot:right>
@@ -26,9 +26,11 @@
                   <span
                     class="text-caption"
                     v-bind:class="{
-                      'text-green': qna.aDtl,
+                      'text-green': qna.replyState === true,
                     }"
-                    >{{ qna.aDtl ? '답변완료' : '답변대기' }}</span
+                    >{{
+                      qna.replyState === true ? '답변완료' : '답변대기'
+                    }}</span
                   >
                 </q-item-section>
 
@@ -63,7 +65,35 @@
 
             <q-card class="bg-b9c9df80 q-ma-sm" style="border-radius: 4px">
               <q-card-section>
-                <p>
+                <q-card v-if="qna.prvtYn === true && qna.pwdCheck === false">
+                  <q-card-section class="q-pt-none">
+                    <q-input
+                      v-model="refQnaPwd"
+                      :type="hidePwd ? 'password' : 'text'"
+                      maxlength="4"
+                      placeholder="비밀번호 숫자 4자리를 입력해주세요."
+                      mask="####"
+                    >
+                      <template v-slot:append>
+                        <q-icon
+                          :name="hidePwd ? 'visibility_off' : 'visibility'"
+                          class="cursor-pointer"
+                          @click="hidePwd = !hidePwd"
+                        />
+                      </template>
+                    </q-input>
+                  </q-card-section>
+
+                  <q-card-actions align="right" class="text-primary">
+                    <q-btn
+                      flat
+                      label="확인"
+                      v-close-popup
+                      @click="checkPwd(qna)"
+                    />
+                  </q-card-actions>
+                </q-card>
+                <p class="q-mt-md" v-if="qna.pwdCheck === true && qna.qDtl">
                   <span
                     class="text-h6 text-weight-medium text-grey q-mr-sm"
                     style="font-family: serif"
@@ -71,7 +101,7 @@
                   >
                   {{ qna.qDtl }}
                 </p>
-                <p class="q-mt-md" v-if="qna.aDtl">
+                <p class="q-mt-md" v-if="qna.pwdCheck === true && qna.aDtl">
                   <span
                     class="text-h6 text-weight-medium text-grey q-mr-sm"
                     style="font-family: serif"
@@ -206,7 +236,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { onMounted, ref } from 'vue';
 import { MaxWidthCont } from 'src/styled/common';
 import SearchForm, { IFSearchForm } from 'src/components/SearchForm.vue';
 import axios from 'axios';
@@ -216,7 +246,7 @@ const $q = useQuasar();
 const refDeleteConfirm = ref<boolean>(false);
 const writeQna = ref<boolean>(false);
 const hidePwd = ref<boolean>(true);
-const refQnaPwd = ref('');
+const refQnaPwd = ref<string>('');
 
 const formOptions: IFSearchForm = {
   items: [
@@ -261,6 +291,7 @@ const formOptions: IFSearchForm = {
 };
 
 export interface QnAIF {
+  boNo: string;
   title: string;
   usrNm: string;
   regDate: string;
@@ -268,9 +299,12 @@ export interface QnAIF {
   prvtYn: boolean;
   qDtl: string;
   aDtl: string;
+  pwdCheck: boolean;
+  replyState: boolean;
 }
 
 const refQnA = ref<QnAIF>({
+  boNo: '',
   title: '',
   usrNm: '',
   regDate: '',
@@ -278,6 +312,8 @@ const refQnA = ref<QnAIF>({
   prvtYn: false,
   qDtl: '',
   aDtl: '',
+  pwdCheck: false,
+  replyState: false,
 });
 
 const searchForm = ref({
@@ -296,6 +332,7 @@ const resetRefQnA = () => {
   refQnA.value.prvtYn = false;
   refQnA.value.qDtl = '';
   refQnA.value.aDtl = '';
+  refQnA.value.pwdCheck = false;
 };
 
 const regQnA = () => {
@@ -329,34 +366,34 @@ const regQnA = () => {
     });
 };
 
-const refQnaList = ref<QnAIF[]>([
-  {
-    title: '관광코스당 소요시간이 어떻게 되나요?',
-    usrNm: '김*수',
-    regDate: '2024-04-03',
-    pwd: '1234',
-    prvtYn: true,
-    qDtl: '질문의 내용입니다.',
-    aDtl: '',
-  },
-  {
-    title: '질문 입니다.',
-    usrNm: '정*민',
-    regDate: '2024-04-09',
-    pwd: '1234',
-    prvtYn: false,
-    qDtl: '질문의 내용입니다.',
-    aDtl: '답변 입니다.',
-  },
-  {
-    title: '질문 입니다. 222',
-    usrNm: '박*민',
-    regDate: '2024-04-11',
-    pwd: '1234',
-    prvtYn: false,
-    qDtl: '질문의 내용입니다.',
-    aDtl: '답변 입니다. 222',
-  },
+const refQnAList = ref<QnAIF[]>([
+  // {
+  //   title: '관광코스당 소요시간이 어떻게 되나요?',
+  //   usrNm: '김*수',
+  //   regDate: '2024-04-03',
+  //   pwd: '1234',
+  //   prvtYn: true,
+  //   qDtl: '질문의 내용입니다.',
+  //   aDtl: '',
+  // },
+  // {
+  //   title: '질문 입니다.',
+  //   usrNm: '정*민',
+  //   regDate: '2024-04-09',
+  //   pwd: '1234',
+  //   prvtYn: false,
+  //   qDtl: '질문의 내용입니다.',
+  //   aDtl: '답변 입니다.',
+  // },
+  // {
+  //   title: '질문 입니다. 222',
+  //   usrNm: '박*민',
+  //   regDate: '2024-04-11',
+  //   pwd: '1234',
+  //   prvtYn: false,
+  //   qDtl: '질문의 내용입니다.',
+  //   aDtl: '답변 입니다. 222',
+  // },
 ]);
 
 let currPage = 1;
@@ -365,43 +402,94 @@ let flag = true;
 
 const loadData = () => {
   axios
-    .post<{ boCd: string; boTi: string; boCont: string; boDt: string }[]>(
-      `${process.env.API_URL}/getBoardList`,
+    .post<
       {
-        currPage: currPage,
-        perPage: String(perPage),
-        boCd: '02',
-        boTi: searchForm.value.title,
-        usrNm: searchForm.value.usrNm,
-        ansrStt: searchForm.value.ansrStt,
-        fromDate: searchForm.value.fromDate,
-        toDate: searchForm.value.toDate,
-      }
-    )
+        boNo: string;
+        boTi: string;
+        usrNm: string;
+        boDt: string;
+        boPw: string;
+        boPrv: boolean;
+        boCont: string;
+        boReCont: string;
+        replyState: boolean;
+      }[]
+    >(`${process.env.API_URL}/getBoardList`, {
+      currPage: currPage,
+      perPage: String(perPage),
+      boCd: '02',
+      boTi: searchForm.value.title,
+      usrNm: searchForm.value.usrNm,
+      ansrStt: searchForm.value.ansrStt,
+      fromDate: searchForm.value.fromDate,
+      toDate: searchForm.value.toDate,
+    })
     .then((response) => {
+      console.log('responsedata::', response.data);
       if (response.data.length > 0) {
-        //   mainNoticeData.value = [
-        //     ...mainNoticeData.value,
-        //     ...response.data.map((item) => ({
-        //       id: item.boNo,
-        //       title: item.boTi,
-        //       desc: item.boCont,
-        //       meta: item.boDt,
-        //     })),
-        //   ];
-        //   if (response.data.length < perPage) {
-        //     flag = false;
-        //   }
-        //   currPage++;
-        // } else {
-        //   flag = false;
+        refQnAList.value = [
+          ...refQnAList.value,
+          ...response.data.map((item) => ({
+            boNo: item.boNo,
+            title: item.boTi,
+            usrNm: item.usrNm,
+            regDate: item.boDt,
+            pwd: item.boPw,
+            prvtYn: item.boPrv,
+            qDtl: item.boCont,
+            aDtl: item.boReCont,
+            replyState: item.replyState,
+            pwdCheck: item.boPrv == true ? false : true,
+          })),
+        ];
+        if (response.data.length < perPage) {
+          flag = false;
+        }
+        currPage++;
+      } else {
+        flag = false;
       }
     });
 };
 
-const deleteQna = ({ reset }: { reset: () => void }) => {
+const checkPwd = (selectedQnA: QnAIF) => {
+  axios
+    .post(`${process.env.API_URL}/checkPwd`, {
+      boNo: selectedQnA.boNo,
+      boPw: refQnaPwd.value,
+    })
+    .then((response) => {
+      // console.log('response.data::', response.data);
+      if (response.data.boPw == null) {
+        // console.log('일치하지 않습니다.');
+        $q.notify({
+          message: '비밀번호가 일치하지 않습니다.',
+          type: 'negative',
+          position: 'top',
+          timeout: 1500,
+        });
+        refQnaPwd.value = '';
+      } else {
+        // console.log('일치합니다.');
+        $q.notify({
+          message: '비밀번호가 일치합니다.',
+          type: 'positive',
+          position: 'top',
+          timeout: 1500,
+        });
+        selectedQnA.qDtl = response.data.boCont;
+        selectedQnA.aDtl = response.data.boReCont;
+        selectedQnA.pwdCheck = true;
+        refQnaPwd.value = '';
+      }
+    });
+};
+
+const deleteQnA = ({ reset }: { reset: () => void }) => {
   refQnaPwd.value = '';
   refDeleteConfirm.value = true;
   reset();
 };
+
+onMounted(loadData);
 </script>
