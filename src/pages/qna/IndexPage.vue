@@ -12,7 +12,8 @@
       <q-slide-item
         v-for="(qna, index) in refQnAList"
         :key="index"
-        @right="deleteQnA"
+        @right="deleteQnAPopup"
+        @slide="deleteTarget = qna"
         right-color="red"
       >
         <template v-slot:right>
@@ -228,7 +229,7 @@
 
         <q-card-actions align="right" class="text-primary">
           <q-btn flat label="취소" v-close-popup />
-          <q-btn flat label="확인" v-close-popup />
+          <q-btn flat label="확인" v-close-popup @click="deleteQnA" />
         </q-card-actions>
       </q-card>
     </MaxWidthCont>
@@ -247,6 +248,7 @@ const refDeleteConfirm = ref<boolean>(false);
 const writeQna = ref<boolean>(false);
 const hidePwd = ref<boolean>(true);
 const refQnaPwd = ref<string>('');
+const deleteTarget = ref<QnAIF>();
 
 const formOptions: IFSearchForm = {
   items: [
@@ -485,10 +487,26 @@ const checkPwd = (selectedQnA: QnAIF) => {
     });
 };
 
-const deleteQnA = ({ reset }: { reset: () => void }) => {
+const deleteQnAPopup = ({ reset }: { reset: () => void }) => {
   refQnaPwd.value = '';
   refDeleteConfirm.value = true;
   reset();
+};
+
+const deleteQnA = () => {
+  // console.log(deleteTarget.value);
+  axios
+    .post(`${process.env.API_URL}/deleteBoard`, {
+      boardList: [
+        {
+          boNo: deleteTarget.value?.boNo,
+          boPw: refQnaPwd.value,
+        },
+      ],
+    })
+    .then((response) => {
+      console.log('response.data::', response.data);
+    });
 };
 
 onMounted(loadData);
