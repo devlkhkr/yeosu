@@ -12,7 +12,7 @@
           <q-form>
             <div v-for="(item, index) in formOptions.items" :key="index">
               <q-input
-                v-if="item.type === 'string'"
+                v-if="item.type === 'text'"
                 :name="item.name"
                 :type="item.type"
                 v-model="refItemsModel[item.name].value"

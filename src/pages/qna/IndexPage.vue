@@ -10,9 +10,9 @@
   <div class="q-mt-lg">
     <q-list bordered separator class="rounded-borders">
       <q-slide-item
-        v-for="(qna, index) in refQnAList"
+        v-for="(qna, index) in refQnaList"
         :key="index"
-        @right="deleteQnAPopup"
+        @right="deleteQnaPopup"
         @slide="deleteTarget = qna"
         right-color="red"
       >
@@ -134,7 +134,7 @@
         <q-card-section class="q-pt-none">
           <q-input
             dense
-            v-model="refQnA.title"
+            v-model="refQna.title"
             autofocus
             maxlength="33"
             placeholder="제목을 입력해주세요."
@@ -148,7 +148,7 @@
         <q-card-section class="q-pt-none">
           <q-input
             dense
-            v-model="refQnA.usrNm"
+            v-model="refQna.usrNm"
             autofocus
             maxlength="17"
             placeholder="이름을 입력해주세요."
@@ -161,7 +161,7 @@
 
         <q-card-section class="q-pt-none">
           <q-input
-            v-model="refQnA.pwd"
+            v-model="refQna.pwd"
             :type="hidePwd ? 'password' : 'text'"
             maxlength="4"
             placeholder="숫자 4자리를 입력해주세요."
@@ -177,7 +177,7 @@
           </q-input>
         </q-card-section>
 
-        <q-toggle v-model="refQnA.prvtYn" label="비밀글 선택" />
+        <q-toggle v-model="refQna.prvtYn" label="비밀글 선택" />
 
         <q-card-section>
           <div class="text-body2">내용</div>
@@ -186,7 +186,7 @@
         <q-card-section class="q-pt-none">
           <q-input
             dense
-            v-model="refQnA.qDtl"
+            v-model="refQna.qDtl"
             autofocus
             type="textarea"
             maxlength="1000"
@@ -195,8 +195,8 @@
         </q-card-section>
 
         <q-card-actions align="right" class="text-primary">
-          <q-btn flat label="취소" v-close-popup @click="resetRefQnA" />
-          <q-btn flat label="확인" v-close-popup @click="regQnA" />
+          <q-btn flat label="취소" v-close-popup @click="resetRefQna" />
+          <q-btn flat label="확인" @click="regQna" />
         </q-card-actions>
       </q-card>
     </MaxWidthCont>
@@ -229,7 +229,7 @@
 
         <q-card-actions align="right" class="text-primary">
           <q-btn flat label="취소" v-close-popup />
-          <q-btn flat label="확인" v-close-popup @click="deleteQnA" />
+          <q-btn flat label="확인" @click="deleteQna" />
         </q-card-actions>
       </q-card>
     </MaxWidthCont>
@@ -248,19 +248,19 @@ const refDeleteConfirm = ref<boolean>(false);
 const writeQna = ref<boolean>(false);
 const hidePwd = ref<boolean>(true);
 const refQnaPwd = ref<string>('');
-const deleteTarget = ref<QnAIF>();
+const deleteTarget = ref<QnaIF>();
 
 const formOptions: IFSearchForm = {
   items: [
     {
       name: 'title',
       title: '제목',
-      type: 'string',
+      type: 'text',
     },
     {
       name: 'usrNm',
       title: '작성자',
-      type: 'string',
+      type: 'text',
     },
     {
       name: 'ansrStt',
@@ -269,7 +269,7 @@ const formOptions: IFSearchForm = {
       selectOptions: [
         {
           label: '전체',
-          value: 'all',
+          value: '00',
         },
         {
           label: '답변대기',
@@ -289,10 +289,17 @@ const formOptions: IFSearchForm = {
   ],
   onSearch: (refItemsModel) => {
     console.log(refItemsModel);
+    searchForm.value.title = refItemsModel.title.value;
+    searchForm.value.usrNm = refItemsModel.usrNm.value;
+    searchForm.value.ansrStt = refItemsModel.ansrStt.value;
+    searchForm.value.fromDate = refItemsModel.regDate.start;
+    searchForm.value.toDate = refItemsModel.regDate.end;
+
+    console.log('search', searchForm.value);
   },
 };
 
-export interface QnAIF {
+export interface QnaIF {
   boNo: string;
   title: string;
   usrNm: string;
@@ -305,7 +312,15 @@ export interface QnAIF {
   replyState: boolean;
 }
 
-const refQnA = ref<QnAIF>({
+export interface searchFormInterface {
+  title: string | number | null | undefined;
+  usrNm: string | number | null | undefined;
+  ansrStt: string | number | null | undefined;
+  fromDate: string | number | null | undefined;
+  toDate: string | number | null | undefined;
+}
+
+const refQna = ref<QnaIF>({
   boNo: '',
   title: '',
   usrNm: '',
@@ -318,7 +333,7 @@ const refQnA = ref<QnAIF>({
   replyState: false,
 });
 
-const searchForm = ref({
+const searchForm = ref<searchFormInterface>({
   title: '',
   usrNm: '',
   ansrStt: '',
@@ -326,49 +341,73 @@ const searchForm = ref({
   toDate: '',
 });
 
-const resetRefQnA = () => {
-  refQnA.value.title = '';
-  refQnA.value.usrNm = '';
-  refQnA.value.regDate = '';
-  refQnA.value.pwd = '';
-  refQnA.value.prvtYn = false;
-  refQnA.value.qDtl = '';
-  refQnA.value.aDtl = '';
-  refQnA.value.pwdCheck = false;
+const resetRefQna = () => {
+  refQna.value.title = '';
+  refQna.value.usrNm = '';
+  refQna.value.regDate = '';
+  refQna.value.pwd = '';
+  refQna.value.prvtYn = false;
+  refQna.value.qDtl = '';
+  refQna.value.aDtl = '';
+  refQna.value.pwdCheck = false;
 };
 
-const regQnA = () => {
-  axios
-    .post(`${process.env.API_URL}/regBoard`, {
-      boCd: '02',
-      boTi: refQnA.value.title,
-      usrNm: refQnA.value.usrNm,
-      boPrv: refQnA.value.prvtYn,
-      boPw: refQnA.value.pwd,
-      boCont: refQnA.value.qDtl,
-    })
-    .then(function (response) {
-      // console.log('QnAResponse::', response.data);
-      if (response.data.state === '1') {
-        $q.notify({
-          message: response.data.message,
-          type: 'positive',
-          position: 'top',
-          timeout: 1500,
-        });
-        resetRefQnA();
-      } else {
-        $q.notify({
-          message: response.data.message,
-          type: 'negative',
-          position: 'top',
-          timeout: 1500,
-        });
-      }
+const regQna = () => {
+  if (
+    refQna.value.title === '' ||
+    refQna.value.usrNm === '' ||
+    refQna.value.pwd === '' ||
+    refQna.value.qDtl === ''
+  ) {
+    $q.notify({
+      message: '모든 항목을 입력해주세요.',
+      type: 'negative',
+      position: 'top',
+      timeout: 1500,
     });
+  } else {
+    if (refQna.value.pwd.length != 4) {
+      $q.notify({
+        message: '비밀번호는 숫자 4자리로 입력해주세요.',
+        type: 'negative',
+        position: 'top',
+        timeout: 1500,
+      });
+    } else {
+      axios
+        .post(`${process.env.API_URL}/regBoard`, {
+          boCd: '02',
+          boTi: refQna.value.title,
+          usrNm: refQna.value.usrNm,
+          boPrv: refQna.value.prvtYn,
+          boPw: refQna.value.pwd,
+          boCont: refQna.value.qDtl,
+        })
+        .then(function (response) {
+          // console.log('QnaResponse::', response.data);
+          if (response.data.state === '1') {
+            $q.notify({
+              message: response.data.message,
+              type: 'positive',
+              position: 'top',
+              timeout: 1500,
+            });
+            resetRefQna();
+          } else {
+            $q.notify({
+              message: response.data.message,
+              type: 'negative',
+              position: 'top',
+              timeout: 1500,
+            });
+          }
+        });
+      writeQna.value = false;
+    }
+  }
 };
 
-const refQnAList = ref<QnAIF[]>([
+const refQnaList = ref<QnaIF[]>([
   // {
   //   title: '관광코스당 소요시간이 어떻게 되나요?',
   //   usrNm: '김*수',
@@ -429,8 +468,8 @@ const loadData = () => {
     .then((response) => {
       console.log('responsedata::', response.data);
       if (response.data.length > 0) {
-        refQnAList.value = [
-          ...refQnAList.value,
+        refQnaList.value = [
+          ...refQnaList.value,
           ...response.data.map((item) => ({
             boNo: item.boNo,
             title: item.boTi,
@@ -454,10 +493,10 @@ const loadData = () => {
     });
 };
 
-const checkPwd = (selectedQnA: QnAIF) => {
+const checkPwd = (selectedQna: QnaIF) => {
   axios
     .post(`${process.env.API_URL}/checkPwd`, {
-      boNo: selectedQnA.boNo,
+      boNo: selectedQna.boNo,
       boPw: refQnaPwd.value,
     })
     .then((response) => {
@@ -479,34 +518,62 @@ const checkPwd = (selectedQnA: QnAIF) => {
           position: 'top',
           timeout: 1500,
         });
-        selectedQnA.qDtl = response.data.boCont;
-        selectedQnA.aDtl = response.data.boReCont;
-        selectedQnA.pwdCheck = true;
+        selectedQna.qDtl = response.data.boCont;
+        selectedQna.aDtl = response.data.boReCont;
+        selectedQna.pwdCheck = true;
         refQnaPwd.value = '';
       }
     });
 };
 
-const deleteQnAPopup = ({ reset }: { reset: () => void }) => {
+const deleteQnaPopup = ({ reset }: { reset: () => void }) => {
   refQnaPwd.value = '';
   refDeleteConfirm.value = true;
   reset();
 };
 
-const deleteQnA = () => {
+const deleteQna = () => {
   // console.log(deleteTarget.value);
-  axios
-    .post(`${process.env.API_URL}/deleteBoard`, {
-      boardList: [
-        {
-          boNo: deleteTarget.value?.boNo,
-          boPw: refQnaPwd.value,
-        },
-      ],
-    })
-    .then((response) => {
-      console.log('response.data::', response.data);
+  if (refQnaPwd.value === '') {
+    $q.notify({
+      message: '비밀번호를 입력해주세요',
+      type: 'negative',
+      position: 'top',
+      timeout: 1500,
     });
+    refQnaPwd.value = '';
+  } else {
+    axios
+      .post(`${process.env.API_URL}/deleteBoard`, {
+        boardList: [
+          {
+            boNo: deleteTarget.value?.boNo,
+            boPw: refQnaPwd.value,
+          },
+        ],
+      })
+      .then((response) => {
+        console.log('response.data::', response.data);
+        if (response.data.state === '1') {
+          $q.notify({
+            message: response.data.message,
+            type: 'positive',
+            position: 'top',
+            timeout: 1500,
+          });
+          resetRefQna();
+        } else {
+          $q.notify({
+            message: response.data.message,
+            type: 'negative',
+            position: 'top',
+            timeout: 1500,
+          });
+        }
+      });
+    refDeleteConfirm.value = false;
+    refQnaPwd.value = '';
+  }
 };
 
 onMounted(loadData);

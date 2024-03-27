@@ -21,7 +21,7 @@ const formOptions: IFSearchForm = {
     {
       name: 'boTi',
       title: '제목',
-      type: 'string',
+      type: 'text',
     },
     // {
     //   name: 'boPeriod',
@@ -44,11 +44,11 @@ const mainNoticeData = ref<MainNoticeData[]>([]);
 let currPage = 1;
 const perPage = 10; // 한 페이지에 보여줄 데이터 개수
 let flag = true;
-const boTi = ref(null);
+const boTi = ref<string | number | null>();
 
 const loadData = () => {
   axios
-    .post<{ boCd: string; boTi: string; boCont: string; boDt: string }[]>(
+    .post<{ boNo: string; boTi: string; boCont: string; boDt: string }[]>(
       `${process.env.API_URL}/getBoardList`,
       {
         currPage: currPage,
