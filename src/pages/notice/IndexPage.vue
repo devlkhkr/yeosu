@@ -44,7 +44,7 @@ const mainNoticeData = ref<MainNoticeData[]>([]);
 let currPage = 1;
 const perPage = 10; // 한 페이지에 보여줄 데이터 개수
 let flag = true;
-const boTi = ref<string | number | null>();
+const boTi = ref<string | number | boolean | null>();
 
 const loadData = () => {
   axios

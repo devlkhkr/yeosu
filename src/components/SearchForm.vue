@@ -38,8 +38,7 @@
                   <div class="flex items-center no-wrap" style="gap: 8px">
                     <q-input
                       v-model="refItemsModel[item.name].start"
-                      mask="date"
-                      :rules="['date']"
+                      mask="####-##-##"
                     >
                       <template v-slot:append>
                         <q-icon
@@ -53,7 +52,10 @@
                             transition-show="scale"
                             transition-hide="scale"
                           >
-                            <q-date v-model="refItemsModel[item.name].start">
+                            <q-date
+                              v-model="refItemsModel[item.name].start"
+                              mask="YYYY-MM-DD"
+                            >
                               <div class="row items-center justify-end">
                                 <q-btn
                                   v-close-popup
@@ -70,8 +72,7 @@
                     <i class="text-grey">~</i>
                     <q-input
                       v-model="refItemsModel[item.name].end"
-                      mask="date"
-                      :rules="['date']"
+                      mask="####-##-##"
                     >
                       <template v-slot:append>
                         <q-icon
@@ -85,7 +86,10 @@
                             transition-show="scale"
                             transition-hide="scale"
                           >
-                            <q-date v-model="refItemsModel[item.name].end">
+                            <q-date
+                              v-model="refItemsModel[item.name].end"
+                              mask="YYYY-MM-DD"
+                            >
                               <div class="row items-center justify-end">
                                 <q-btn
                                   v-close-popup
@@ -134,12 +138,12 @@ export interface FormItem {
   type: string;
   selectOptions?: {
     label: string;
-    value: string | number | null;
+    value: string | number | boolean | null;
   }[];
 }
 
 export interface ItemValues {
-  value?: string | number | null;
+  value?: string | number | boolean | null;
   label?: string | null;
   start?: string | null;
   end?: string | null;
