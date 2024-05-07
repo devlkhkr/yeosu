@@ -202,6 +202,7 @@ const goRegCustInfo = () => {
     bkdSchdInfo.ticketPrice = refSelectedTm.value.price;
     bkdSchdInfo.tm_no = refSelectedTm.value.tm_no;
     bkdSchdInfo.rv_cd = refSelectedTm.value.rv_cd;
+    bkdSchdInfo.way = refSelectedTm.value.wy_nm;
   }
   console.log('bkdSchdInfo:', bkdSchdInfo);
   router.push('/book/regCustInfo');

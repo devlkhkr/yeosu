@@ -9,6 +9,11 @@
       <span class="text-caption">시간대</span>
     </template>
   </q-input>
+  <q-input v-model="bkdSchdInfo.way" readonly>
+    <template v-slot:prepend>
+      <span class="text-caption">운항경로</span>
+    </template>
+  </q-input>
   <q-field readonly>
     <template v-slot:prepend>
       <span class="text-caption">총액</span>
@@ -70,6 +75,7 @@
             v-model="custInfo[index].custPhone"
             placeholder="'-' 없이 숫자만 입력"
             placeholder-class="text-red"
+            maxlength="11"
           >
             <template v-slot:prepend>
               <span class="text-caption">연락처</span>
@@ -167,13 +173,14 @@ import { BookedCustInfo } from 'src/types/cust';
 import { VueDaumPostcode } from 'vue-daum-postcode';
 import { MaxWidthCont } from 'src/styled/common';
 import WaveButton from 'src/components/WaveButton.vue';
-// import { useRouter } from 'vue-router';
-import axios from 'axios';
+// import { useQuasar } from 'quasar';
+import { useRouter } from 'vue-router';
+// import axios from 'axios';
 
+// const $q = useQuasar();
+const router = useRouter();
 const newAddress = ref(false);
 const newAddrIdx = ref(0);
-
-// const router = useRouter();
 
 const bkdSchdInfo = bkdSchdInfoStore();
 const amount = bkdSchdInfo.ticketPrice * bkdSchdInfo.custCnt;
@@ -204,10 +211,22 @@ const setCustAddr = (data: { [key: string]: string }) => {
 };
 
 const book = () => {
-  console.log('custInfo.value:', custInfo.value);
-  axios.post(`${process.env.API_URL}/book`, custInfo.value).then((response) => {
-    console.log('response.data::' , response);
-    // router.push('/book/regCustInfo');
-  });
+  // console.log('custInfo.value:', custInfo.value);
+  // axios.post(`${process.env.API_URL}/book`, custInfo.value).then((response) => {
+  //   // console.log('response.data::' , response);
+  //   if (response.data.message === null) {
+  //     $q.notify({
+  //       message: '예약이 완료 되었습니다.',
+  //       type: 'positive',
+  //       position: 'top',
+  //       timeout: 1500,
+  //     });
+  //     `/book/myTicketDetail/${data.}`
+  //     router.push('/book/myTicketDetail/:rsvNo?');
+  //   }
+  // });
+  bkdSchdInfo.custNm = custInfo.value[0].custNm;
+  bkdSchdInfo.custPhone = custInfo.value[0].custPhone;
+  router.push('/pay');
 };
 </script>

@@ -21,6 +21,7 @@
     "@fullcalendar/interaction": "^6.1.10",
     "@fullcalendar/vue3": "^6.1.10",
     "@quasar/extras": "^1.16.4",
+    "@tosspayments/payment-widget-sdk": "^0.10.2",
     "axios": "^1.6.7",
     "core-js": "^3.31.1",
     "emotion-vuejs": "^1.0.5",

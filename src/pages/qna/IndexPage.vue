@@ -467,7 +467,7 @@ const loadData = () => {
       boCd: '02',
       boTi: searchForm.value.title,
       usrNm: searchForm.value.usrNm,
-      replyState: searchForm.value.ansrStt,
+      reStSel: searchForm.value.ansrStt,
       fromDate: searchForm.value.fromDate,
       toDate: searchForm.value.toDate,
     })

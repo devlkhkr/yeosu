@@ -77,6 +77,17 @@ const routes: RouteRecordRaw[] = [
     ],
   },
   {
+    path: '/pay',
+    component: () => import('layouts/MainLayout.vue'),
+    children: [
+      {
+        path: '',
+        component: () => import('pages/pay/tossPay.vue'),
+        name: '결제',
+      },
+    ],
+  },
+  {
     path: '/reference',
     component: () => import('layouts/MainLayout.vue'),
     children: [
