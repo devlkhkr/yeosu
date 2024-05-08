@@ -21,9 +21,11 @@ import { loadPaymentWidget, ANONYMOUS } from '@tosspayments/payment-widget-sdk';
 import { onMounted } from 'vue';
 import { ref } from 'vue';
 import { bkdSchdInfoStore } from '../../stores/common';
+import { bkdCustInfoStore } from '../../stores/common';
 import { nanoid } from 'nanoid';
 
 const bkdSchdInfo = bkdSchdInfoStore();
+const bkdCustInfo = bkdCustInfoStore();
 
 const clientKey = 'test_gck_docs_Ovk5rk1EwkEbP0W43n07xlzm';
 const customerKey = ANONYMOUS;
@@ -31,9 +33,11 @@ const paymentWidget = ref();
 const paymentMethodWidget = ref();
 const paymentAgreement = ref();
 const inputEnabled = ref<boolean>();
-const amount = ref<number>(bkdSchdInfo.custCnt * 6000);
+const amount = ref<number>(bkdSchdInfo.custCnt * bkdSchdInfo.ticketPrice);
 
 onMounted(async () => {
+  console.log('bkdSchdInfo:::', bkdSchdInfo);
+  console.log('bkdCustInfo:::', bkdCustInfo);
   paymentWidget.value = await loadPaymentWidget(clientKey, customerKey);
   paymentMethodWidget.value = paymentWidget.value.renderPaymentMethods(
     '#payment-method',
@@ -43,13 +47,16 @@ onMounted(async () => {
   );
   paymentAgreement.value = paymentWidget.value.renderAgreement('#agreement');
 
-  paymentAgreement.value.on('change', (agreementStatus) => {
-    if (agreementStatus.agreedRequiredTerms == true) {
-      inputEnabled.value = true;
-    } else {
-      inputEnabled.value = false;
+  paymentAgreement.value.on(
+    'change',
+    (agreementStatus: { agreedRequiredTerms: boolean }) => {
+      if (agreementStatus.agreedRequiredTerms == true) {
+        inputEnabled.value = true;
+      } else {
+        inputEnabled.value = false;
+      }
     }
-  });
+  );
 });
 
 async function requestPayment() {
@@ -60,8 +67,8 @@ async function requestPayment() {
         orderName: bkdSchdInfo.way,
         customerName: bkdSchdInfo.custNm,
         customerMobilePhone: bkdSchdInfo.custPhone,
-        // successUrl: `${window.location.origin}/success`,
-        // failUrl: `${window.location.origin}/fail`,
+        successUrl: `${window.location.origin}/success`,
+        failUrl: `${window.location.origin}/fail`,
       });
     }
   } catch (error) {

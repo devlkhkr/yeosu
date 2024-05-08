@@ -204,7 +204,6 @@ const goRegCustInfo = () => {
     bkdSchdInfo.rv_cd = refSelectedTm.value.rv_cd;
     bkdSchdInfo.way = refSelectedTm.value.wy_nm;
   }
-  console.log('bkdSchdInfo:', bkdSchdInfo);
   router.push('/book/regCustInfo');
 };
 
@@ -224,7 +223,6 @@ const calendarOptions = ref({
           yearMonth: yearMonth,
         })
         .then(function (response) {
-          console.log('repsonsedata:', response.data);
           const bgState: {
             [key: string]: boolean;
           } = {};

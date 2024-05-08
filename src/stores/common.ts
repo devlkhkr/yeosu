@@ -1,4 +1,5 @@
 import { defineStore } from 'pinia';
+import { BookedCustInfo } from 'src/types/cust';
 
 //Drawer Open State Store
 export const drawerOpenState = defineStore('drawerOpen', {
@@ -28,6 +29,15 @@ export const bkdSchdInfoStore = defineStore('bkdSchdInfoStore', {
     way: '',
     custNm: '',
     custPhone: '',
+  }),
+  getters: {},
+  actions: {},
+  persist: true,
+});
+
+export const bkdCustInfoStore = defineStore('bkdCustInfoStore', {
+  state: () => ({
+    custList: [] as BookedCustInfo[],
   }),
   getters: {},
   actions: {},

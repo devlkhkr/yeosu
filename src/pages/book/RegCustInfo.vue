@@ -173,6 +173,7 @@ import { BookedCustInfo } from 'src/types/cust';
 import { VueDaumPostcode } from 'vue-daum-postcode';
 import { MaxWidthCont } from 'src/styled/common';
 import WaveButton from 'src/components/WaveButton.vue';
+import { bkdCustInfoStore } from 'src/stores/common';
 // import { useQuasar } from 'quasar';
 import { useRouter } from 'vue-router';
 // import axios from 'axios';
@@ -182,6 +183,7 @@ const router = useRouter();
 const newAddress = ref(false);
 const newAddrIdx = ref(0);
 
+const bkdCustInfo = bkdCustInfoStore();
 const bkdSchdInfo = bkdSchdInfoStore();
 const amount = bkdSchdInfo.ticketPrice * bkdSchdInfo.custCnt;
 const custConfig: BookedCustInfo = {
@@ -225,6 +227,8 @@ const book = () => {
   //     router.push('/book/myTicketDetail/:rsvNo?');
   //   }
   // });
+
+  bkdCustInfo.custList = custInfo.value;
   bkdSchdInfo.custNm = custInfo.value[0].custNm;
   bkdSchdInfo.custPhone = custInfo.value[0].custPhone;
   router.push('/pay');
